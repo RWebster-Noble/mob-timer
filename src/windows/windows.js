@@ -104,7 +104,7 @@ exports.dispatchEvent = (event, data) => {
   if (event === 'configUpdated') {
     exports.setConfigState(data)
   }
-  if (event === 'alert' && data == secondsUntilFullscreen) {
+  if (event === 'break' || (event === 'alert' && data == secondsUntilFullscreen)) {
     exports.createFullscreenWindow()
   }
   if (event === 'stopAlerts') {

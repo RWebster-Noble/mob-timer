@@ -17,7 +17,7 @@ class TimerState {
     this.lastBreakTime = Date.now()
 
     this.breakFrequency = 1000 * 10
-    this.breakDuration = 1000 * 5
+    this.breakDurationSeconds = 10
 
     this.createTimers(options.Timer || Timer)
   }
@@ -35,8 +35,8 @@ class TimerState {
       this.callback('alert', alertSeconds)
     })
 
-    this.breakTimer = new TimerClass({ countDown: false }, breakSeconds => {
-      this.callback('break', breakSeconds)
+    this.breakTimer = new TimerClass({ countDown: true, time: this.breakDurationSeconds }, breakSeconds => {
+      this.breakTimerTick(breakSeconds)
     })
   }
 
@@ -45,7 +45,7 @@ class TimerState {
     this.dispatchMainTimerChange(this.secondsPerTurn)
   }
 
-  mainTimerTick(secondsRemaining) {
+  mainTimerTick(secondsRemaining) {    
     this.dispatchMainTimerChange(secondsRemaining)
     if (secondsRemaining < 0) {
       this.mainTimerDone()
@@ -54,7 +54,7 @@ class TimerState {
 
   mainTimerDone() {
     this.pause()
-    if (Date.now() > this.lastBreakTime + this.breakFrequency) {
+    if (this.onBreak()) {
       this.startBreak()
     }
     else {
@@ -70,7 +70,7 @@ class TimerState {
       secondsPerTurn: this.secondsPerTurn
     })
   }
-  
+
   startAlerts() {
     this.alertsTimer.reset(0)
     this.alertsTimer.start()
@@ -82,15 +82,32 @@ class TimerState {
     this.callback('stopAlerts')
   }
 
-  startBreak() {
-    this.breakTimer.reset(0)
-    this.breakTimer.start()
-    this.callback('break', 0)
+  breakTimerTick(secondsRemaining) {
+    // this.callback('timerChange', {
+    //   secondsRemaining,
+    //   secondsPerTurn: this.secondsPerTurn
+    // })
+    if (secondsRemaining < 0) {
+      this.breakOver()
+    }
   }
-  
+
+  startBreak() {
+    this.breakTimer.reset(this.breakDurationSeconds)
+    this.breakTimer.start()
+    this.callback('break', this.breakDurationSeconds)
+  }
+
   stopBreak() {
-    this.breakTimer.pause()
-    this.callback('stopBreak')
+    this.breakTimer.pause()    
+    this.breakTimer.reset(this.breakDurationSeconds)
+    //this.callback('stopBreak')
+  }
+
+  breakOver() {
+    this.stopBreak()
+    this.lastBreakTime = Date.now()
+    this.callback('rotated', this.mobbers.getCurrentAndNextMobbers())
   }
 
   start() {
@@ -103,6 +120,10 @@ class TimerState {
     this.mainTimer.pause()
     this.callback('paused')
     this.stopAlerts()
+  }
+
+  onBreak() {
+    return Date.now() > this.lastBreakTime + this.breakFrequency
   }
 
   rotate() {
@@ -119,7 +140,12 @@ class TimerState {
 
   publishConfig() {
     this.callback('configUpdated', this.getState())
-    this.callback('rotated', this.mobbers.getCurrentAndNextMobbers())
+    if (this.onBreak()) {
+      this.callback('break', this.mobbers.getCurrentAndNextMobbers())
+    }
+    else {
+      this.callback('rotated', this.mobbers.getCurrentAndNextMobbers())
+    }
   }
 
   addMobber(mobber) {

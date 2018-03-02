@@ -22,6 +22,17 @@ ipc.on('rotated', (event, data) => {
   nextPicEl.src = data.next.image || "../img/sad-cyclops.png"
 })
 
+ipc.on('break', (event, data) => {
+  currentEl.innerHTML = "Break!"
+  currentPicEl.src = "../img/sad-cyclops.png"
+
+  if (!data.next) {
+    data.next = data.current
+  }
+  nextEl.innerHTML = data.next.name
+  nextPicEl.src = data.next.image || "../img/sad-cyclops.png"  
+})
+
 ipc.on('configUpdated', (event, data) => {
   countEl.innerHTML = formatTime(data.secondsPerTurn)
 })
