@@ -10,27 +10,25 @@ const nextPicEl = document.getElementById('nextPic')
 
 ipc.on('rotated', (event, data) => {
   if (!data.current) {
-    data.current = {name: "Add a mobber"}
+    data.current = { name: "Add a mobber" }
   }
-  currentEl.innerHTML = data.current.name
-  currentPicEl.src = data.current.image || "../img/sad-cyclops.png"
+
+  if (data.onbreak) {
+    currentEl.innerHTML = "Break!"
+    currentPicEl.src = "../img/sad-cyclops.png"
+    startTurnBtn.hidden = true
+  }
+  else {
+    currentEl.innerHTML = data.current.name
+    currentPicEl.src = data.current.image || "../img/sad-cyclops.png"
+    startTurnBtn.hidden = false
+  }
 
   if (!data.next) {
     data.next = data.current
   }
   nextEl.innerHTML = data.next.name
   nextPicEl.src = data.next.image || "../img/sad-cyclops.png"
-})
-
-ipc.on('break', (event, data) => {
-  currentEl.innerHTML = "Break!"
-  currentPicEl.src = "../img/sad-cyclops.png"
-
-  if (!data.next) {
-    data.next = data.current
-  }
-  nextEl.innerHTML = data.next.name
-  nextPicEl.src = data.next.image || "../img/sad-cyclops.png"  
 })
 
 ipc.on('configUpdated', (event, data) => {

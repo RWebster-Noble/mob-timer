@@ -3,7 +3,7 @@ class Timer {
     this.rateMilliseconds = options.rateMilliseconds || 1000
     this.time = options.time || 0
     this.change = options.countDown ? -1 : 1
-    this.callback = callback
+    this.callback = callback    
   }
 
   start() {
@@ -24,6 +24,10 @@ class Timer {
 
   reset(value) {
     this.time = value
+  }
+
+  isRunning(){
+    return this.interval != null
   }
 }
 
