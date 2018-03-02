@@ -14,6 +14,11 @@ class TimerState {
     this.alertSoundTimes = []
     this.timerAlwaysOnTop = true
 
+    this.lastBreakTime = Date.now()
+
+    this.breakFrequency = 1000 * 10
+    this.breakDuration = 1000 * 5
+
     this.createTimers(options.Timer || Timer)
   }
 
@@ -29,26 +34,9 @@ class TimerState {
     this.alertsTimer = new TimerClass({ countDown: false }, alertSeconds => {
       this.callback('alert', alertSeconds)
     })
-  }
 
-  mainTimerTick(secondsRemaining) {
-    this.dispatchMainTimerChange(secondsRemaining)
-    if (secondsRemaining < 0) {
-      this.mainTimerDone()
-    }
-  }
-  
-  mainTimerDone() {
-    this.pause()
-    this.rotate()
-    this.callback('turnEnded')
-    this.startAlerts()
-  }
-
-  dispatchMainTimerChange(secondsRemaining) {
-    this.callback('timerChange', {
-      secondsRemaining,
-      secondsPerTurn: this.secondsPerTurn
+    this.breakTimer = new TimerClass({ countDown: false }, breakSeconds => {
+      this.callback('break', breakSeconds)
     })
   }
 
@@ -57,6 +45,32 @@ class TimerState {
     this.dispatchMainTimerChange(this.secondsPerTurn)
   }
 
+  mainTimerTick(secondsRemaining) {
+    this.dispatchMainTimerChange(secondsRemaining)
+    if (secondsRemaining < 0) {
+      this.mainTimerDone()
+    }
+  }
+
+  mainTimerDone() {
+    this.pause()
+    if (Date.now() > this.lastBreakTime + this.breakFrequency) {
+      this.startBreak()
+    }
+    else {
+      this.rotate()
+      this.callback('turnEnded')
+      this.startAlerts()
+    }
+  }
+
+  dispatchMainTimerChange(secondsRemaining) {
+    this.callback('timerChange', {
+      secondsRemaining,
+      secondsPerTurn: this.secondsPerTurn
+    })
+  }
+  
   startAlerts() {
     this.alertsTimer.reset(0)
     this.alertsTimer.start()
@@ -66,6 +80,17 @@ class TimerState {
   stopAlerts() {
     this.alertsTimer.pause()
     this.callback('stopAlerts')
+  }
+
+  startBreak() {
+    this.breakTimer.reset(0)
+    this.breakTimer.start()
+    this.callback('break', 0)
+  }
+  
+  stopBreak() {
+    this.breakTimer.pause()
+    this.callback('stopBreak')
   }
 
   start() {
