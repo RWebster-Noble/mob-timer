@@ -22,19 +22,20 @@ class TimerState {
   }
 
   createTimers(TimerClass) {
-    this.mainTimer = new TimerClass({countDown: true, time: this.secondsPerTurn}, secondsRemaining => {
-      this.dispatchTimerChange(secondsRemaining)
-      if (secondsRemaining < 0) {
-        this.pause()
-        this.rotate()
-        this.callback('turnEnded')
-        this.startAlerts()
-      }
+    this.mainTimer = new TimerClass({ countDown: true, time: this.secondsPerTurn }, secondsRemaining => {
+      this.mainTimerTick(secondsRemaining)
     })
 
     this.alertsTimer = new TimerClass({countDown: false}, alertSeconds => {
       this.callback('alert', alertSeconds)
     })
+  }
+
+  mainTimerTick(secondsRemaining) {
+    this.dispatchMainTimerChange(secondsRemaining)
+    if (secondsRemaining < 0) {
+      this.mainTimerDone()
+    }
   }
 
   dispatchTimerChange(secondsRemaining) {
