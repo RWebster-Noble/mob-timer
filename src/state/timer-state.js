@@ -151,8 +151,7 @@ class TimerState {
 
   publishConfig() {
     this.callback('configUpdated', this.getState())
-    var currAndNext = this.getCurrentAndNextMobbers()
-    this.callback('rotated', { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() })
+    this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
   addMobber(mobber) {
