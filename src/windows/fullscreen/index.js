@@ -7,6 +7,7 @@ const currentEl = document.getElementById('current')
 const currentPicEl = document.getElementById('currentPic')
 const nextEl = document.getElementById('next')
 const nextPicEl = document.getElementById('nextPic')
+const sitMessage = document.getElementById('sitMessage')
 
 ipc.on('rotated', (event, data) => {
   if (!data.current) {
@@ -17,11 +18,14 @@ ipc.on('rotated', (event, data) => {
     currentEl.innerHTML = "Break!"
     currentPicEl.src = "../img/sad-cyclops.png"
     startTurnBtn.hidden = true
+    sitMessage.hidden = true
+
   }
   else {
     currentEl.innerHTML = data.current.name
     currentPicEl.src = data.current.image || "../img/sad-cyclops.png"
     startTurnBtn.hidden = false
+    sitMessage.hidden = false
   }
 
   if (!data.next) {
