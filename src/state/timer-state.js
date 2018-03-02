@@ -26,7 +26,7 @@ class TimerState {
       this.mainTimerTick(secondsRemaining)
     })
 
-    this.alertsTimer = new TimerClass({countDown: false}, alertSeconds => {
+    this.alertsTimer = new TimerClass({ countDown: false }, alertSeconds => {
       this.callback('alert', alertSeconds)
     })
   }
@@ -37,8 +37,15 @@ class TimerState {
       this.mainTimerDone()
     }
   }
+  
+  mainTimerDone() {
+    this.pause()
+    this.rotate()
+    this.callback('turnEnded')
+    this.startAlerts()
+  }
 
-  dispatchTimerChange(secondsRemaining) {
+  dispatchMainTimerChange(secondsRemaining) {
     this.callback('timerChange', {
       secondsRemaining,
       secondsPerTurn: this.secondsPerTurn
@@ -47,7 +54,7 @@ class TimerState {
 
   reset() {
     this.mainTimer.reset(this.secondsPerTurn)
-    this.dispatchTimerChange(this.secondsPerTurn)
+    this.dispatchMainTimerChange(this.secondsPerTurn)
   }
 
   startAlerts() {
