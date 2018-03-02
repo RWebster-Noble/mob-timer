@@ -16,7 +16,7 @@ class TimerState {
 
     this.lastBreakTime = Date.now()
 
-    this.breakFrequency = 1000 * 30
+    this.breakFrequency = 1000 * 20
     this.breakDurationSeconds = 10
 
     this.createTimers(options.Timer || Timer)
@@ -95,13 +95,15 @@ class TimerState {
   startBreak() {
     this.breakTimer.reset(this.breakDurationSeconds)
     this.breakTimer.start()
-    var currAndNext = this.getCurrentAndNextMobbers()
-    this.callback('rotated', { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() })
+    this.mainTimer.pause()
+    this.lastBreakTime = 0;
+    this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
   stopBreak() {
     this.breakTimer.pause()
-    this.breakTimer.reset(this.breakDurationSeconds)
+    this.breakTimer.reset(this.breakDurationSeconds)    
+    this.callback('alert', 0)
   }
 
   breakOver() {
@@ -114,6 +116,7 @@ class TimerState {
     this.mainTimer.start()
     this.callback('started')
     this.stopAlerts()
+    this.publishConfig()
   }
 
   pause() {
@@ -131,7 +134,12 @@ class TimerState {
 
   getCurrentAndNextMobbers() {
     var currAndNext = this.mobbers.getCurrentAndNextMobbers()
-    //if(this.mainTimer.)
+
+    if (this.breakTimer.isRunning())
+      currAndNext.current = { id: null, name: "Break!" }
+    else if (Date.now() + this.mainTimer.time > this.lastBreakTime + this.breakFrequency)
+        currAndNext.next = { id: null, name: "Break!" }
+
     return { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() }
   }
 
