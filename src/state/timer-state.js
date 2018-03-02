@@ -59,9 +59,9 @@ class TimerState {
     }
     else {
       this.rotate()
-      this.callback('turnEnded')   
-    }  
-    this.startAlerts()   
+      this.callback('turnEnded')
+    }
+    this.startAlerts()
   }
 
   dispatchMainTimerChange(secondsRemaining) {
@@ -94,8 +94,8 @@ class TimerState {
 
   startBreak() {
     this.breakTimer.reset(this.breakDurationSeconds)
-    this.breakTimer.start()    
-    var currAndNext = this.mobbers.getCurrentAndNextMobbers()
+    this.breakTimer.start()
+    var currAndNext = this.getCurrentAndNextMobbers()
     this.callback('rotated', { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() })
   }
 
@@ -107,7 +107,7 @@ class TimerState {
   breakOver() {
     this.stopBreak()
     this.lastBreakTime = Date.now()
-    this.callback('rotated', this.mobbers.getCurrentAndNextMobbers())
+    this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
   start() {
@@ -125,7 +125,14 @@ class TimerState {
   rotate() {
     this.reset()
     this.mobbers.rotate()
-    this.callback('rotated', this.mobbers.getCurrentAndNextMobbers())
+    this.breakTimer.pause()
+    this.callback('rotated', this.getCurrentAndNextMobbers())
+  }
+
+  getCurrentAndNextMobbers() {
+    var currAndNext = this.mobbers.getCurrentAndNextMobbers()
+    //if(this.mainTimer.)
+    return { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() }
   }
 
   initialize() {
@@ -136,18 +143,18 @@ class TimerState {
 
   publishConfig() {
     this.callback('configUpdated', this.getState())
-    var currAndNext = this.mobbers.getCurrentAndNextMobbers()
+    var currAndNext = this.getCurrentAndNextMobbers()
     this.callback('rotated', { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() })
   }
 
   addMobber(mobber) {
     this.mobbers.addMobber(mobber)
     this.publishConfig()
-    this.callback('rotated', this.mobbers.getCurrentAndNextMobbers())
+    this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
   removeMobber(mobber) {
-    let currentMobber = this.mobbers.getCurrentAndNextMobbers().current
+    let currentMobber = this.getCurrentAndNextMobbers().current
     let isRemovingCurrentMobber = currentMobber ? currentMobber.name == mobber.name : false
 
     this.mobbers.removeMobber(mobber)
@@ -159,7 +166,7 @@ class TimerState {
     }
 
     this.publishConfig()
-    this.callback('rotated', this.mobbers.getCurrentAndNextMobbers())
+    this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
   updateMobber(mobber) {
