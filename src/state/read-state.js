@@ -1,7 +1,7 @@
 let fs = require('fs')
-let os = require('os')
+const {app} = require('electron')
 
-let stateFilePath = os.tmpdir() + '/state.json'
+let stateFilePath = app.getPath('userData') + '\\Mob-Timer_State.json' 
 
 module.exports = {
     read
