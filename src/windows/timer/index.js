@@ -59,8 +59,15 @@ ipc.on('rotated', (event, data) => {
   if (!data.current) {
     data.current = { name: "Add a mobber" }
   }
-  currentPicEl.src = data.current.image || "../img/sad-cyclops.png"
-  currentEl.innerHTML = data.current.name
+
+  if (data.onbreak) {
+    currentEl.innerHTML = "Break!"    
+    currentPicEl.src = "../img/sad-cyclops.png"
+  }
+  else {
+    currentPicEl.src = data.current.image || "../img/sad-cyclops.png"
+    currentEl.innerHTML = data.current.name
+  }
 
   if (!data.next) {
     data.next = data.current
