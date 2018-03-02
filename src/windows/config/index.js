@@ -6,6 +6,9 @@ const minutesEl = document.getElementById('minutes')
 const addEl = document.getElementById('add')
 const addMobberForm = document.getElementById('addMobberForm')
 const fullscreenSecondsEl = document.getElementById('fullscreen-seconds')
+const breakCheckbox = document.getElementById('break')
+const breakFrequencyEl = document.getElementById('break-frequency')
+const breakDurationEl = document.getElementById('break-duration')
 const snapToEdgesCheckbox = document.getElementById('snap-to-edges')
 const alertAudioCheckbox = document.getElementById('alertAudio')
 const replayAudioContainer = document.getElementById('replayAudioContainer')
@@ -79,6 +82,11 @@ ipc.on('configUpdated', (event, data) => {
   })
   mobbersEl.appendChild(frag)
   fullscreenSecondsEl.value = data.secondsUntilFullscreen
+
+  breakCheckbox.checked = data.breakEnabled
+  breakFrequencyEl.value = data.breakFrequencySeconds / 60
+  breakDurationEl.value = data.breakDurationSeconds / 60
+
   snapToEdgesCheckbox.checked = data.snapThreshold > 0
 
   alertAudioCheckbox.checked = data.alertSoundTimes.length > 0
@@ -108,6 +116,16 @@ addMobberForm.addEventListener('submit', event => {
 
 fullscreenSecondsEl.addEventListener('change', _ => {
   ipc.send('setSecondsUntilFullscreen', fullscreenSecondsEl.value * 1)
+})
+
+breakCheckbox.addEventListener('change', _ => {
+  ipc.send('setBreakEnabled', breakCheckbox.checked)
+})
+breakFrequencyEl.addEventListener('change', _ => {
+  ipc.send('setBreakFrequencySeconds', breakFrequencyEl.value * 60)
+})
+breakDurationEl.addEventListener('change', _ => {
+  ipc.send('setBreakDurationSeconds', breakDurationEl.value * 60)
 })
 
 ipc.send('configWindowReady')

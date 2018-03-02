@@ -9,7 +9,7 @@ exports.createTimerWindow = () => {
     return
   }
 
-  let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize
+  let { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
   timerWindow = new electron.BrowserWindow({
     x: width - 220,
     y: height - 90,
@@ -81,7 +81,7 @@ exports.createFullscreenWindow = () => {
     return
   }
 
-  let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize
+  let { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
   fullscreenWindow = new electron.BrowserWindow({
     width,
     height,
@@ -124,9 +124,12 @@ exports.dispatchEvent = (event, data) => {
 
 exports.setConfigState = data => {
   var needToRecreateTimerWindow = timerAlwaysOnTop != data.timerAlwaysOnTop
-
+  
   snapThreshold = data.snapThreshold
   secondsUntilFullscreen = data.secondsUntilFullscreen
+  breakEnabled = data.breakEnabled
+  breakFrequencySeconds = data.breakFrequencySeconds
+  breakDurationSeconds = data.breakDurationSeconds
   timerAlwaysOnTop = data.timerAlwaysOnTop
 
   if (needToRecreateTimerWindow && timerWindow) {

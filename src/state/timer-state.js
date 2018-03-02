@@ -9,15 +9,15 @@ class TimerState {
     this.secondsPerTurn = 600
     this.mobbers = new Mobbers()
     this.secondsUntilFullscreen = 30
+    this.breakEnabled = true
+    this.breakFrequencyMilliseconds = 1000 * 20
+    this.breakDurationSeconds = 10
     this.snapThreshold = 25
     this.alertSound = null
     this.alertSoundTimes = []
     this.timerAlwaysOnTop = true
 
     this.lastBreakTime = Date.now()
-
-    this.breakFrequency = 1000 * 20
-    this.breakDurationSeconds = 10
 
     this.createTimers(options.Timer || Timer)
   }
@@ -54,7 +54,7 @@ class TimerState {
 
   mainTimerDone() {
     this.pause()
-    if (Date.now() > this.lastBreakTime + this.breakFrequency) {
+    if (this.breakEnabled && Date.now() > this.lastBreakTime + this.breakFrequencyMilliseconds) {
       this.startBreak()
     }
     else {
@@ -102,7 +102,7 @@ class TimerState {
 
   stopBreak() {
     this.breakTimer.pause()
-    this.breakTimer.reset(this.breakDurationSeconds)    
+    this.breakTimer.reset(this.breakDurationSeconds)
     this.callback('alert', 0)
   }
 
@@ -137,8 +137,8 @@ class TimerState {
 
     if (this.breakTimer.isRunning())
       currAndNext.current = { id: null, name: "Break!" }
-    else if (Date.now() + this.mainTimer.time > this.lastBreakTime + this.breakFrequency)
-        currAndNext.next = { id: null, name: "Break!" }
+    else if (this.breakEnabled && Date.now() + this.mainTimer.time > this.lastBreakTime + this.breakFrequencyMilliseconds)
+      currAndNext.next = { id: null, name: "Break!" }
 
     return { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() }
   }
@@ -193,6 +193,21 @@ class TimerState {
     this.publishConfig()
   }
 
+  setBreakEnabled(breakEnabled) {
+    this.breakEnabled = breakEnabled
+    this.publishConfig()
+  }
+
+  setBreakDurationSeconds(breakDurationSeconds) {
+    this.breakDurationSeconds = breakDurationSeconds
+    this.publishConfig()
+  }
+
+  setBreakFrequencySeconds(breakFrequencySeconds) {
+    this.breakFrequencyMilliseconds = breakFrequencySeconds * 1000
+    this.publishConfig()
+  }
+
   setSnapThreshold(value) {
     this.snapThreshold = value
     this.publishConfig()
@@ -218,6 +233,9 @@ class TimerState {
       mobbers: this.mobbers.getAll(),
       secondsPerTurn: this.secondsPerTurn,
       secondsUntilFullscreen: this.secondsUntilFullscreen,
+      breakEnabled: this.breakEnabled,
+      breakFrequencySeconds: this.breakFrequencyMilliseconds / 1000,
+      breakDurationSeconds: this.breakDurationSeconds,
       snapThreshold: this.snapThreshold,
       alertSound: this.alertSound,
       alertSoundTimes: this.alertSoundTimes,
@@ -234,6 +252,17 @@ class TimerState {
     if (typeof state.secondsUntilFullscreen === 'number') {
       this.setSecondsUntilFullscreen(state.secondsUntilFullscreen)
     }
+
+    if (typeof state.breakEnabled === 'boolean') {
+      this.setBreakEnabled(state.breakEnabled)
+    }
+    if (typeof state.breakFrequencySeconds === 'number') {
+      this.setBreakFrequencySeconds(state.breakFrequencySeconds)
+    }
+    if (typeof state.breakDurationSeconds === 'number') {
+      this.setBreakDurationSeconds(state.breakDurationSeconds)
+    }   
+
     if (typeof state.snapThreshold === 'number') {
       this.setSnapThreshold(state.snapThreshold)
     }
