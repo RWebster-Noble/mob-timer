@@ -100,7 +100,10 @@ ipc.on('configUpdated', (event, data) => {
   timerAlwaysOnTopCheckbox.checked = data.timerAlwaysOnTop
 })
 
-minutesEl.addEventListener('keyup', _ => {
+minutesEl.addEventListener('change', _ => {
+  ipc.send('setSecondsPerTurn', minutesEl.value * 60)
+})
+minutesEl.addEventListener('focusout', _ => {
   ipc.send('setSecondsPerTurn', minutesEl.value * 60)
 })
 
@@ -114,29 +117,39 @@ addMobberForm.addEventListener('submit', event => {
   addEl.value = ''
 })
 
-fullscreenSecondsEl.addEventListener('keyup', _ => {
+fullscreenSecondsEl.addEventListener('change', _ => {
+  ipc.send('setSecondsUntilFullscreen', fullscreenSecondsEl.value * 1)
+})
+fullscreenSecondsEl.addEventListener('focusout', _ => {
   ipc.send('setSecondsUntilFullscreen', fullscreenSecondsEl.value * 1)
 })
 
-breakCheckbox.addEventListener('keyup', _ => {
+breakCheckbox.addEventListener('change', _ => {
   ipc.send('setBreakEnabled', breakCheckbox.checked)
 })
-breakFrequencyEl.addEventListener('keyup', _ => {
+breakFrequencyEl.addEventListener('change', _ => {
   ipc.send('setBreakFrequencySeconds', breakFrequencyEl.value * 60)
 })
-breakDurationEl.addEventListener('keyup', _ => {
+breakFrequencyEl.addEventListener('focusout', _ => {
+  ipc.send('setBreakFrequencySeconds', breakFrequencyEl.value * 60)
+})
+breakDurationEl.addEventListener('change', _ => {
+  ipc.send('setBreakDurationSeconds', breakDurationEl.value * 60)
+})
+breakDurationEl.addEventListener('focusout', _ => {
   ipc.send('setBreakDurationSeconds', breakDurationEl.value * 60)
 })
 
 ipc.send('configWindowReady')
 
-snapToEdgesCheckbox.addEventListener('keyup', _ => {
+snapToEdgesCheckbox.addEventListener('change', _ => {
   ipc.send('setSnapThreshold', snapToEdgesCheckbox.checked ? 25 : 0)
 })
 
-alertAudioCheckbox.addEventListener('keyup', _ => updateAlertTimes())
-replayAlertAudioCheckbox.addEventListener('keyup', _ => updateAlertTimes())
-replayAudioAfterSeconds.addEventListener('keyup', _ => updateAlertTimes())
+alertAudioCheckbox.addEventListener('change', _ => updateAlertTimes())
+replayAlertAudioCheckbox.addEventListener('change', _ => updateAlertTimes())
+replayAudioAfterSeconds.addEventListener('change', _ => updateAlertTimes())
+replayAudioAfterSeconds.addEventListener('focusout', _ => updateAlertTimes())
 
 function updateAlertTimes() {
   updateAlertControls()
@@ -167,7 +180,7 @@ function updateAlertControls() {
   replayAudioAfterSeconds.disabled = secondsDisabled
 }
 
-useCustomSoundCheckbox.addEventListener('keyup', _ => {
+useCustomSoundCheckbox.addEventListener('change', _ => {
   let mp3 = null
 
   if (useCustomSoundCheckbox.checked) {
@@ -189,6 +202,6 @@ useCustomSoundCheckbox.addEventListener('keyup', _ => {
   ipc.send('setAlertSound', mp3)
 })
 
-timerAlwaysOnTopCheckbox.addEventListener('keyup', _ => {
+timerAlwaysOnTopCheckbox.addEventListener('change', _ => {
   ipc.send('setTimerAlwaysOnTop', timerAlwaysOnTopCheckbox.checked)
 })

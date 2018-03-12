@@ -10,6 +10,7 @@ class TimerState {
     this.mobbers = new Mobbers()
     this.secondsUntilFullscreen = 30
     this.breakEnabled = true
+    this.breakDeffered = false
     this.breakFrequencyMilliseconds = 1000 * 20
     this.breakDurationSeconds = 10
     this.snapThreshold = 25
@@ -27,15 +28,23 @@ class TimerState {
   }
 
   createTimers(TimerClass) {
-    this.mainTimer = new TimerClass({ countDown: true, time: this.secondsPerTurn }, secondsRemaining => {
+    this.mainTimer = new TimerClass({
+      countDown: true,
+      time: this.secondsPerTurn
+    }, secondsRemaining => {
       this.mainTimerTick(secondsRemaining)
     })
 
-    this.alertsTimer = new TimerClass({ countDown: false }, alertSeconds => {
+    this.alertsTimer = new TimerClass({
+      countDown: false
+    }, alertSeconds => {
       this.callback('alert', alertSeconds)
     })
 
-    this.breakTimer = new TimerClass({ countDown: true, time: this.breakDurationSeconds }, breakSeconds => {
+    this.breakTimer = new TimerClass({
+      countDown: true,
+      time: this.breakDurationSeconds
+    }, breakSeconds => {
       this.breakTimerTick(breakSeconds)
     })
   }
@@ -54,14 +63,14 @@ class TimerState {
 
   mainTimerDone() {
     this.pause()
-    if (this.breakEnabled && Date.now() > this.lastBreakTime + this.breakFrequencyMilliseconds) {
+    if (this.shouldBeOnBreak()) {
       this.startBreak()
-    }
-    else {
+    } else {
       this.rotate()
       this.callback('turnEnded')
     }
     this.startAlerts()
+    this.breakDeffered = false;
   }
 
   dispatchMainTimerChange(secondsRemaining) {
@@ -109,14 +118,33 @@ class TimerState {
   breakOver() {
     this.stopBreak()
     this.lastBreakTime = Date.now()
+    this.reset()
     this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
+  deferBreak() {
+    this.stopBreak()
+    this.breakDeffered = true;
+    this.rotate()
+  }
+
+  shouldBeOnBreak() {
+    return this.breakEnabled && Date.now() > this.lastBreakTime + this.breakFrequencyMilliseconds
+  }
+
+  breakNextTurn(){
+    return this.breakEnabled && Date.now() + (this.mainTimer.time*1000) > this.lastBreakTime + this.breakFrequencyMilliseconds
+  }
+
   start() {
-    this.mainTimer.start()
-    this.callback('started')
-    this.stopAlerts()
-    this.publishConfig()
+    if (this.breakTimer.isRunning()) {
+      this.deferBreak()
+    } else {
+      this.mainTimer.start()
+      this.callback('started')
+      this.stopAlerts()
+      this.publishConfig()
+    }
   }
 
   pause() {
@@ -128,19 +156,40 @@ class TimerState {
   rotate() {
     this.reset()
     this.mobbers.rotate()
-    this.breakTimer.pause()
-    this.callback('rotated', this.getCurrentAndNextMobbers())
+
+    var currAndNext = this.getCurrentAndNextMobbers()
+
+    if (this.breakTimer.isRunning()) {
+      this.breakOver()
+    } else if (currAndNext.next.break) {
+      this.startBreak()
+      this.startAlerts()
+    } else {
+      this.callback('rotated', currAndNext)
+      this.stopAlerts()
+    }
   }
 
   getCurrentAndNextMobbers() {
     var currAndNext = this.mobbers.getCurrentAndNextMobbers()
 
     if (this.breakTimer.isRunning())
-      currAndNext.current = { id: null, name: "Break!" }
-    else if (this.breakEnabled && Date.now() + this.mainTimer.time > this.lastBreakTime + this.breakFrequencyMilliseconds)
-      currAndNext.next = { id: null, name: "Break!" }
+      currAndNext.current = {
+        id: null,
+        name: "Break!"
+      }
+    else if (this.breakNextTurn())
+      currAndNext.next = {
+        id: null,
+        name: "Break!",
+        break: true
+      }
 
-    return { current: currAndNext.current, next: currAndNext.next, onbreak: this.breakTimer.isRunning() }
+    return {
+      current: currAndNext.current,
+      next: currAndNext.next,
+      onbreak: this.breakTimer.isRunning()
+    }
   }
 
   initialize() {
@@ -260,7 +309,7 @@ class TimerState {
     }
     if (typeof state.breakDurationSeconds === 'number') {
       this.setBreakDurationSeconds(state.breakDurationSeconds)
-    }   
+    }
 
     if (typeof state.snapThreshold === 'number') {
       this.setSnapThreshold(state.snapThreshold)

@@ -86,7 +86,7 @@ exports.createFullscreenWindow = () => {
     width,
     height,
     resizable: false,
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     frame: false
   })
 
