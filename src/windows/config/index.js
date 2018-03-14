@@ -74,7 +74,7 @@ function toggleMobberDisabled(mobber) {
 }
 
 ipc.on('configUpdated', (event, data) => {
-  minutesEl.value = Math.ceil(data.secondsPerTurn / 60)
+  minutesEl.value = data.secondsPerTurn / 60
   mobbersEl.innerHTML = ''
   const frag = document.createDocumentFragment()
   data.mobbers.map(mobber => {
