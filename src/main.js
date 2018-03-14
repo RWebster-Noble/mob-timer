@@ -28,7 +28,7 @@ ipc.on('fullscreenWindowReady', _ => timerState.publishConfig())
 
 ipc.on('pause', _ => timerState.pause())
 ipc.on('unpause', _ => timerState.start())
-ipc.on('skip', _ => timerState.rotate())
+ipc.on('skip', _ => timerState.rotateOrBreak())
 ipc.on('startTurn', _ => timerState.start())
 ipc.on('configure', _ => {
   windows.showConfigWindow()

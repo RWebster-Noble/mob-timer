@@ -66,7 +66,7 @@ class TimerState {
     if (this.shouldBeOnBreak()) {
       this.startBreak()
     } else {
-      this.rotate()
+      this.rotateOrBreak()
       this.callback('turnEnded')
     }
     this.startAlerts()
@@ -105,7 +105,6 @@ class TimerState {
     this.breakTimer.reset(this.breakDurationSeconds)
     this.breakTimer.start()
     this.mainTimer.pause()
-    this.lastBreakTime = 0;
     this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
@@ -119,6 +118,7 @@ class TimerState {
     this.stopBreak()
     this.lastBreakTime = Date.now()
     this.reset()
+    this.rotate()
     this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
@@ -132,8 +132,8 @@ class TimerState {
     return this.breakEnabled && Date.now() > this.lastBreakTime + this.breakFrequencyMilliseconds
   }
 
-  breakNextTurn(){
-    return this.breakEnabled && Date.now() + (this.mainTimer.time*1000) > this.lastBreakTime + this.breakFrequencyMilliseconds
+  breakNextTurn() {
+    return this.breakEnabled && Date.now() + (this.mainTimer.time * 1000) > this.lastBreakTime + this.breakFrequencyMilliseconds
   }
 
   start() {
@@ -153,7 +153,7 @@ class TimerState {
     this.stopAlerts()
   }
 
-  rotate() {
+  rotateOrBreak() {
     this.reset()
     this.mobbers.rotate()
 
@@ -161,13 +161,19 @@ class TimerState {
 
     if (this.breakTimer.isRunning()) {
       this.breakOver()
-    } else if (currAndNext.next.break) {
+    } else if (!this.breakDeffered && currAndNext.next.break && this.breakNextTurn()) {
       this.startBreak()
       this.startAlerts()
     } else {
       this.callback('rotated', currAndNext)
       this.stopAlerts()
     }
+  }
+
+  rotate() {    
+    this.reset()
+    this.mobbers.rotate()
+    this.callback('rotated', this.getCurrentAndNextMobbers())
   }
 
   getCurrentAndNextMobbers() {
