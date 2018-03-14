@@ -11,8 +11,8 @@ class TimerState {
     this.secondsUntilFullscreen = 30
     this.breakEnabled = true
     this.breakDeffered = false
-    this.breakFrequencyMilliseconds = 1000 * 20
-    this.breakDurationSeconds = 10
+    this.breakFrequencyMilliseconds = 60 * 60 * 1000 // default 60 mins
+    this.breakDurationSeconds = 10 * 60 // default 10 min
     this.snapThreshold = 25
     this.alertSound = null
     this.alertSoundTimes = []
