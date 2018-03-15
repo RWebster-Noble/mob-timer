@@ -21,6 +21,8 @@ class TimerState {
     this.lastBreakTime = Date.now()
 
     this.createTimers(options.Timer || Timer)
+
+    this.nextMobber = null;
   }
 
   setCallback(callback) {
@@ -157,20 +159,23 @@ class TimerState {
     this.reset()
     this.mobbers.rotate()
 
+    if (this.nextMobber.break) {
+      this.startBreak()
+      this.startAlerts()
+      return;
+    }
+
     var currAndNext = this.getCurrentAndNextMobbers()
 
     if (this.breakTimer.isRunning()) {
       this.breakOver()
-    } else if (!this.breakDeffered && currAndNext.next.break && this.breakNextTurn()) {
-      this.startBreak()
-      this.startAlerts()
     } else {
       this.callback('rotated', currAndNext)
       this.stopAlerts()
     }
   }
 
-  rotate() {    
+  rotate() {
     this.reset()
     this.mobbers.rotate()
     this.callback('rotated', this.getCurrentAndNextMobbers())
@@ -179,18 +184,22 @@ class TimerState {
   getCurrentAndNextMobbers() {
     var currAndNext = this.mobbers.getCurrentAndNextMobbers()
 
-    if (this.breakTimer.isRunning())
+    if (this.breakTimer.isRunning()){
       currAndNext.current = {
         id: null,
         name: "Break!"
       }
-    else if (this.breakNextTurn())
+    }
+    else if (this.breakNextTurn()){
       currAndNext.next = {
         id: null,
         name: "Break!",
         break: true
       }
+    }
 
+    this.nextMobber = currAndNext.next
+    
     return {
       current: currAndNext.current,
       next: currAndNext.next,
