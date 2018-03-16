@@ -94,10 +94,10 @@ class TimerState {
   }
 
   breakTimerTick(secondsRemaining) {
-    // this.callback('timerChange', {
-    //   secondsRemaining,
-    //   secondsPerTurn: this.secondsPerTurn
-    // })
+    this.callback('timerChange', {
+      secondsRemaining,
+      secondsPerTurn: this.breakDurationSeconds
+    })
     if (secondsRemaining < 0) {
       this.breakOver()
     }
@@ -107,7 +107,8 @@ class TimerState {
     this.breakTimer.reset(this.breakDurationSeconds)
     this.breakTimer.start()
     this.mainTimer.pause()
-    this.callback('rotated', this.getCurrentAndNextMobbers())
+    this.callback('rotated', this.getCurrentAndNextMobbers())    
+    this.dispatchMainTimerChange(this.breakDurationSeconds)
   }
 
   stopBreak() {
@@ -183,7 +184,7 @@ class TimerState {
   }
 
   getCurrentAndNextMobbers() {
-        var currAndNext = this.mobbers.getCurrentAndNextMobbers()
+    var currAndNext = this.mobbers.getCurrentAndNextMobbers()
 
     if (this.breakTimer.isRunning()){
       currAndNext.current = {
