@@ -218,6 +218,19 @@ class TimerState {
   publishConfig() {
     this.callback('configUpdated', this.getState())
     this.callback('rotated', this.getCurrentAndNextMobbers())
+
+    if(this.breakTimer.isRunning()){
+      this.callback('timerChange', {
+        secondsRemaining: this.breakTimer.time,
+        secondsPerTurn: this.breakDurationSeconds
+      })
+      return;
+    }
+
+    if(this.mainTimer.isRunning())
+    {      
+      this.dispatchMainTimerChange(this.mainTimer.time)
+    }
   }
 
   addMobber(mobber) {
