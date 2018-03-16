@@ -122,18 +122,15 @@ exports.dispatchEvent = (event, data) => {
   }
 }
 
-exports.setConfigState = data => {
-  var needToRecreateTimerWindow = timerAlwaysOnTop != data.timerAlwaysOnTop
-  
+exports.setConfigState = data => {  
   snapThreshold = data.snapThreshold
   secondsUntilFullscreen = data.secondsUntilFullscreen
   breakEnabled = data.breakEnabled
   breakFrequencySeconds = data.breakFrequencySeconds
   breakDurationSeconds = data.breakDurationSeconds
-  timerAlwaysOnTop = data.timerAlwaysOnTop
+  timerAlwaysOnTop = data.timerAlwaysOnTop || data.timerOnTopBecausePaused
 
-  if (needToRecreateTimerWindow && timerWindow) {
-    timerWindow.close()
-    exports.createTimerWindow()
+  if (timerWindow) {
+    timerWindow.setAlwaysOnTop(timerAlwaysOnTop)
   }
 }

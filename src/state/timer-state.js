@@ -152,7 +152,8 @@ class TimerState {
   pause() {
     this.mainTimer.pause()
     this.callback('paused')
-    this.stopAlerts()
+    this.stopAlerts()    
+    this.publishConfig()
   }
 
   rotateOrBreak() {
@@ -182,7 +183,7 @@ class TimerState {
   }
 
   getCurrentAndNextMobbers() {
-    var currAndNext = this.mobbers.getCurrentAndNextMobbers()
+        var currAndNext = this.mobbers.getCurrentAndNextMobbers()
 
     if (this.breakTimer.isRunning()){
       currAndNext.current = {
@@ -302,7 +303,8 @@ class TimerState {
       snapThreshold: this.snapThreshold,
       alertSound: this.alertSound,
       alertSoundTimes: this.alertSoundTimes,
-      timerAlwaysOnTop: this.timerAlwaysOnTop
+      timerAlwaysOnTop: this.timerAlwaysOnTop,
+      timerOnTopBecausePaused: !this.mainTimer.isRunning()
     }
   }
 
