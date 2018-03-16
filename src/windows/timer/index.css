@@ -157,3 +157,15 @@ body {
 audio {
   display: none;
 }
+
+.break{
+  display: table-row;
+  text-align: center;
+  font-size: 13px;
+}
+
+.breakTextContainer{
+  position: absolute;
+  right: 30px;
+  top: 5px;
+}

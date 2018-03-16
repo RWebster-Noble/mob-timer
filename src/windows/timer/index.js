@@ -12,6 +12,8 @@ const nextPicEl = document.getElementById('nextPic')
 const nextBtn = document.getElementById('nextButton')
 const timerCanvas = document.getElementById('timerCanvas')
 const alertAudio = document.getElementById('alertAudio')
+const breakP = document.getElementById('nextBreakText')
+const breakTimeSpn = document.getElementById('breakTime')
 
 const context = timerCanvas.getContext('2d')
 
@@ -102,6 +104,13 @@ ipc.on('turnEnded', (event, data) => {
 ipc.on('configUpdated', (event, data) => {
   alertSoundTimes = data.alertSoundTimes
   alertAudio.src = data.alertSound || './default.mp3'
+
+  breakP.style.display = data.breakEnabled && data.breakStartsAtTime != -1 ? "" : "none"
+
+  var date = new Date(data.breakStartsAtTime)  
+  var strHours = (date.getHours() < 10 ? '0' : '') + date.getHours()
+  var strMins = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()  
+  breakTimeSpn.innerText = strHours + ":" + strMins
 })
 
 ipc.on('alert', (event, data) => {

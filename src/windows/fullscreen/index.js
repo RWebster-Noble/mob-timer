@@ -10,6 +10,8 @@ const nextEl = document.getElementById('next')
 const nextPicEl = document.getElementById('nextPic')
 const sitMessage = document.getElementById('sitMessage')
 const timerCanvas = document.getElementById('timerCanvas')
+const breakTimeDiv = document.getElementById('breakTimeContainer')
+const breakTimeSpn = document.getElementById('breakTime')
 
 timerCanvas.hidden = true;
 
@@ -46,6 +48,15 @@ ipc.on('timerChange', (event, data) => {
   clearCanvas()
   drawTimerCircle()
   drawTimerArc(data.secondsRemaining, data.secondsPerTurn)
+})
+
+ipc.on('configUpdated', (event, data) => {  
+  breakTimeDiv.style.display = data.breakEnabled && data.breakStartsAtTime != -1 ? "" : "none" 
+
+  var date = new Date(data.breakStartsAtTime)  
+  var strHours = (date.getHours() < 10 ? '0' : '') + date.getHours()
+  var strMins = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()  
+  breakTimeSpn.innerText = strHours + ":" + strMins
 })
 
 function clearCanvas() {
