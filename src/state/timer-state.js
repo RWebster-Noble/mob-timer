@@ -183,7 +183,8 @@ class TimerState {
       this.breakOver()
     } else {
       this.callback('rotated', currAndNext)
-      this.stopAlerts()
+      this.alertsTimer.pause()
+      this.alertsTimer.reset(0)
     }
   }
 
