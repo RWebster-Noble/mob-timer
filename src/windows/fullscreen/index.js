@@ -52,11 +52,8 @@ ipc.on('timerChange', (event, data) => {
 
 ipc.on('configUpdated', (event, data) => {  
   breakTimeDiv.style.display = data.breakEnabled && data.breakStartsAtTime != -1 ? "" : "none" 
-
-  var date = new Date(data.breakStartsAtTime)  
-  var strHours = (date.getHours() < 10 ? '0' : '') + date.getHours()
-  var strMins = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()  
-  breakTimeSpn.innerText = strHours + ":" + strMins
+  
+  breakTimeSpn.innerText = new Date(data.breakStartsAtTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 })
 
 function clearCanvas() {
