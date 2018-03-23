@@ -168,9 +168,6 @@ class TimerState {
   }
 
   rotateOrBreak() {
-    this.reset()
-    this.mobbers.rotate()
-
     if (this.nextMobber.break) {
       this.startBreak()
       this.startAlerts()
@@ -182,7 +179,7 @@ class TimerState {
     if (this.breakTimer.isRunning()) {
       this.breakOver()
     } else {
-      this.callback('rotated', currAndNext)
+      this.rotate()
       this.alertsTimer.pause()
       this.alertsTimer.reset(0)
     }
