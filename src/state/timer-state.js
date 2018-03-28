@@ -174,8 +174,6 @@ class TimerState {
       return;
     }
 
-    var currAndNext = this.getCurrentAndNextMobbers()
-
     if (this.breakTimer.isRunning()) {
       this.breakOver()
     } else {
@@ -192,7 +190,7 @@ class TimerState {
   }
 
   getCurrentAndNextMobbers() {
-    var currAndNext = this.mobbers.getCurrentAndNextMobbers()
+    let currAndNext = this.mobbers.getCurrentAndNextMobbers()
 
     if (this.breakTimer.isRunning()) {
       currAndNext.current = {
