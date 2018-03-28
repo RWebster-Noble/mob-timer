@@ -32,7 +32,7 @@ ipc.on('skip', _ => timerState.rotateOrBreak())
 ipc.on('startTurn', _ => timerState.start())
 ipc.on('configure', _ => {
   windows.showConfigWindow()
-  windows.closeFullscreenWindow()
+  windows.closeFullscreenWindows()
 })
 ipc.on('addMobber', (event, mobber) => timerState.addMobber(mobber))
 ipc.on('removeMobber', (event, mobber) => timerState.removeMobber(mobber))

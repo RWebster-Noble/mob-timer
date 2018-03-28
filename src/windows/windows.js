@@ -105,7 +105,7 @@ exports.createFullscreenWindow = () => {
     let { x, y } = display.bounds
     let { width, height } = display.workAreaSize
 
-    fullscreenWindow = new electron.BrowserWindow({
+    window = new electron.BrowserWindow({
       x,
       y,
       fullscreen: true,
@@ -114,24 +114,24 @@ exports.createFullscreenWindow = () => {
       frame: false
     })
 
-    fullscreenWindow.loadURL(`file://${__dirname}/fullscreen/index.html`)
+    window.loadURL(`file://${__dirname}/fullscreen/index.html`)
 
-    fullscreenWindow.on('closed', x => {
+    window.on('closed', x => {
       let i = fullscreenWindows.indexOf(x.sender);
       fullscreenWindows.splice(i, 1);
       if (fullscreenWindows.length == 0)
         fullscreenWindows = null;
     })
 
-    fullscreenWindows.push(fullscreenWindow)
+    fullscreenWindows.push(window)
   })
 }
 
-exports.closeFullscreenWindow = () => {
+exports.closeFullscreenWindows = () => {
   if (fullscreenWindows) {
     let windowsCopy = fullscreenWindows.slice();
-    windowsCopy.forEach(fullscreenWindow => {
-      fullscreenWindow.close()
+    windowsCopy.forEach(window => {
+      window.close()
     })
   }
 }
@@ -144,7 +144,7 @@ exports.dispatchEvent = (event, data) => {
     exports.createFullscreenWindow()
   }
   if (event === 'stopAlerts') {
-    exports.closeFullscreenWindow()
+    exports.closeFullscreenWindows()
   }
 
   if (timerWindows) {
@@ -156,8 +156,8 @@ exports.dispatchEvent = (event, data) => {
     configWindow.webContents.send(event, data)
   }
   if (fullscreenWindows) {
-    fullscreenWindows.forEach(fullscreenWindow => {
-      fullscreenWindow.webContents.send(event, data)
+    fullscreenWindows.forEach(window => {
+      window.webContents.send(event, data)
     })
   }
 }
