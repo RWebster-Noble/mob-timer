@@ -129,7 +129,8 @@ exports.createFullscreenWindow = () => {
 
 exports.closeFullscreenWindow = () => {
   if (fullscreenWindows) {
-    fullscreenWindows.forEach(fullscreenWindow => {
+    let windowsCopy = fullscreenWindows.slice();
+    windowsCopy.forEach(fullscreenWindow => {
       fullscreenWindow.close()
     })
   }
