@@ -32,10 +32,13 @@ exports.createTimerWindow = () => {
     timerWindow.loadURL(`file://${__dirname}/timer/index.html`)
 
     timerWindow.on('closed', x => {
-      let i = timerWindows.indexOf(x.sender);
-      timerWindows.splice(i, 1);
-      if (timerWindows.length == 0)
-        timerWindows = null;
+      if (timerWindows) {
+        let i = timerWindows.indexOf(x.sender);
+        timerWindows.splice(i, 1);
+        if (timerWindows.length == 0)
+          timerWindows = null;
+        exports.closeTimerWindows()
+      }
     })
 
     let getCenter = bounds => {
@@ -68,6 +71,16 @@ exports.createTimerWindow = () => {
 
     timerWindows.push(timerWindow)
   });
+}
+
+exports.closeTimerWindows = () => {
+  if (timerWindows) {
+    windowsCopy = timerWindows.slice();
+    timerWindows = null;
+    windowsCopy.forEach(window => {
+      window.close()
+    })
+  }
 }
 
 exports.showConfigWindow = () => {
@@ -117,10 +130,14 @@ exports.createFullscreenWindow = () => {
     window.loadURL(`file://${__dirname}/fullscreen/index.html`)
 
     window.on('closed', x => {
-      let i = fullscreenWindows.indexOf(x.sender);
-      fullscreenWindows.splice(i, 1);
-      if (fullscreenWindows.length == 0)
-        fullscreenWindows = null;
+      if (fullscreenWindows) {
+        let i = fullscreenWindows.indexOf(x.sender);
+        fullscreenWindows.splice(i, 1);
+        if (fullscreenWindows.length == 0)
+          fullscreenWindows = null;
+
+        exports.closeFullscreenWindows();
+      }
     })
 
     fullscreenWindows.push(window)
@@ -129,7 +146,8 @@ exports.createFullscreenWindow = () => {
 
 exports.closeFullscreenWindows = () => {
   if (fullscreenWindows) {
-    let windowsCopy = fullscreenWindows.slice();
+    windowsCopy = fullscreenWindows.slice();
+    fullscreenWindows = null;
     windowsCopy.forEach(window => {
       window.close()
     })
