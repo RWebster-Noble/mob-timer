@@ -171,6 +171,7 @@ class TimerState {
     if (this.nextMobber.break) {
       this.startBreak()
       this.startAlerts()
+      this.publishConfig()
       return;
     }
 
