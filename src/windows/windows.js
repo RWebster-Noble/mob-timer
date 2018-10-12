@@ -26,7 +26,12 @@ exports.createTimerWindow = () => {
       resizable: false,
       alwaysOnTop: timerAlwaysOnTop,
       frame: false,
-      icon: __dirname + '/../../src/windows/img/icon.png'
+      icon: __dirname + '/../../src/windows/img/icon.png',
+      show: false
+    })
+
+    timerWindow.once('ready-to-show', () => {
+      timerWindow.show()
     })
 
     timerWindow.loadURL(`file://${__dirname}/timer/index.html`)
@@ -99,7 +104,12 @@ exports.createConfigWindow = () => {
   configWindow = new electron.BrowserWindow({
     width: 420,
     height: 500,
-    autoHideMenuBar: true
+    autoHideMenuBar: true,
+    show: false
+  })
+
+  configWindow.once('ready-to-show', () => {
+    configWindow.show()
   })
 
   configWindow.loadURL(`file://${__dirname}/config/index.html`)
@@ -116,15 +126,19 @@ exports.createFullscreenWindow = () => {
   displays.forEach(display => {
 
     let { x, y } = display.bounds
-    let { width, height } = display.workAreaSize
 
-    window = new electron.BrowserWindow({
+    let window = new electron.BrowserWindow({
       x,
       y,
       fullscreen: true,
       resizable: false,
       alwaysOnTop: true,
-      frame: false
+      frame: false,
+      show: false
+    })
+  
+    window.once('ready-to-show', () => {
+      window.show()
     })
 
     window.loadURL(`file://${__dirname}/fullscreen/index.html`)
