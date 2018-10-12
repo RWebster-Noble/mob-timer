@@ -10,41 +10,60 @@ exports.createTimerWindow = () => {
   }
 
   timerWindows = [];
-  let displays = electron.screen.getAllDisplays()
-  displays.forEach(display => {
-    let { width, height } = display.workAreaSize
-    let { x, y } = display.bounds
+  let primaryDisplay = electron.screen.getPrimaryDisplay()
+  let primaryTimerWindow = openTimerWindow(primaryDisplay, null)
 
-    const timerWidth = 220;
-    const timerHeight = 90;
+  electron.screen.getAllDisplays().forEach(display => {
+    var isPrimaryDisplay = display.id == primaryDisplay.id
+    if(!isPrimaryDisplay)
+      openTimerWindow(display, primaryTimerWindow)
+  });
+}
 
-    let timerWindow = new electron.BrowserWindow({
-      x: x + width - timerWidth,
-      y: y + height - timerHeight,
-      width: timerWidth,
-      height: timerHeight,
-      resizable: false,
-      alwaysOnTop: timerAlwaysOnTop,
-      frame: false,
-      icon: __dirname + '/../../src/windows/img/icon.png',
-      show: false
-    })
+function openTimerWindow(display, parent){
+  let { width, height } = display.workAreaSize
+  let { x, y } = display.bounds
 
-    timerWindow.once('ready-to-show', () => {
-      timerWindow.show()
-    })
+  const timerWidth = 220;
+  const timerHeight = 90;
 
-    timerWindow.loadURL(`file://${__dirname}/timer/index.html`)
+  let timerWindow = new electron.BrowserWindow({
+    x: x + width - timerWidth,
+    y: y + height - timerHeight,
+    width: timerWidth,
+    height: timerHeight,
+    resizable: false,
+    alwaysOnTop: timerAlwaysOnTop,
+    frame: false,
+    icon: __dirname + '/../../src/windows/img/icon.png',
+    parent: parent,
+    show: false
+  })
 
-    timerWindow.on('closed', x => {
-      if (timerWindows) {
-        let i = timerWindows.indexOf(x.sender);
-        timerWindows.splice(i, 1);
-        if (timerWindows.length == 0)
-          timerWindows = null;
-        exports.closeTimerWindows()
-      }
-    })
+  timerWindow.once('ready-to-show', () => {
+    timerWindow.show()
+  })
+
+  timerWindow.loadURL(`file://${__dirname}/timer/index.html`)
+
+  timerWindow.on('closed', x => {
+    if (timerWindows) {
+      closeThisWindow(x); // To prevent an infinate window closing loop
+      exports.closeTimerWindows()
+    }
+  })
+
+  let getCenter = bounds => {
+    return {
+      x: bounds.x + (bounds.width / 2),
+      y: bounds.y + (bounds.height / 2)
+    }
+  }
+
+  timerWindow.on('move', e => {
+    if (snapThreshold <= 0) {
+      return
+    }
 
     let getCenter = bounds => {
       return {
@@ -53,29 +72,25 @@ exports.createTimerWindow = () => {
       }
     }
 
-    timerWindow.on('move', e => {
-      if (snapThreshold <= 0) {
-        return
-      }
+    let windowBounds = timerWindow.getBounds()
+    let screenBounds = electron.screen.getDisplayNearestPoint(getCenter(windowBounds)).workArea
 
-      let getCenter = bounds => {
-        return {
-          x: bounds.x + (bounds.width / 2),
-          y: bounds.y + (bounds.height / 2)
-        }
-      }
+    let snapTo = windowSnapper(windowBounds, screenBounds, snapThreshold)
+    if (snapTo.x != windowBounds.x || snapTo.y != windowBounds.y) {
+      timerWindow.setPosition(snapTo.x, snapTo.y)
+    }
+  })
 
-      let windowBounds = timerWindow.getBounds()
-      let screenBounds = electron.screen.getDisplayNearestPoint(getCenter(windowBounds)).workArea
+  timerWindows.push(timerWindow)
 
-      let snapTo = windowSnapper(windowBounds, screenBounds, snapThreshold)
-      if (snapTo.x != windowBounds.x || snapTo.y != windowBounds.y) {
-        timerWindow.setPosition(snapTo.x, snapTo.y)
-      }
-    })
+  return timerWindow
+}
 
-    timerWindows.push(timerWindow)
-  });
+function closeThisWindow(window) {
+  let i = timerWindows.indexOf(window.sender);
+  timerWindows.splice(i, 1);
+  if (timerWindows.length == 0)
+    timerWindows = null;
 }
 
 exports.closeTimerWindows = () => {
