@@ -39,17 +39,7 @@ class TimerState {
       time: this.secondsPerTurn
     }, secondsRemaining => {
       this.mainTimerTick(secondsRemaining)
-        if (secondsRemaining < 0) {
-        this.pause()
-        this.rotate()
-        this.callback('turnEnded')
-        this.startAlerts()
-
-        if (this.clearClipboardHistoryOnTurnEnd) {
-          clipboard.clearClipboardHistory(this.numberOfItemsClipboardHistoryStores)
-        }
-
-    }})
+    })
 
     this.alertsTimer = new TimerClass({
       countDown: false
@@ -87,6 +77,10 @@ class TimerState {
     }
     this.startAlerts()
     this.breakDeffered = false;
+
+    if (this.clearClipboardHistoryOnTurnEnd) { 
+      clipboard.clearClipboardHistory(this.numberOfItemsClipboardHistoryStores) 
+    }
   }
 
   dispatchTimerChange() {
