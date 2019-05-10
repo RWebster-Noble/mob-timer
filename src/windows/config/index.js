@@ -1,7 +1,8 @@
 const ipc = require('electron').ipcRenderer
-const {dialog} = require('electron').remote
+const { dialog } = require('electron').remote
 
 const mobbersEl = document.getElementById('mobbers')
+const shuffleEl = document.getElementById('shuffle')
 const minutesEl = document.getElementById('minutes')
 const addEl = document.getElementById('add')
 const addMobberForm = document.getElementById('addMobberForm')
@@ -17,7 +18,9 @@ const replayAudioAfterSeconds = document.getElementById('replayAudioAfterSeconds
 const useCustomSoundCheckbox = document.getElementById('useCustomSound')
 const customSoundEl = document.getElementById('customSound')
 const timerAlwaysOnTopCheckbox = document.getElementById('timerAlwaysOnTop')
-
+const shuffleMobbersOnStartupCheckbox = document.getElementById('shuffleMobbersOnStartup')
+const clearClipboardHistoryOnTurnEndCheckbox = document.getElementById('clearClipboardHistoryOnTurnEnd')
+const numberOfItemsClipboardHistoryStores = document.getElementById('numberOfItemsClipboardHistoryStores')
 
 function createMobberEl(mobber) {
   const el = document.createElement('div')
@@ -46,9 +49,9 @@ function createMobberEl(mobber) {
   rmBtn.innerHTML = 'Remove'
   el.appendChild(rmBtn)
 
-  imgEl.addEventListener('click', _ => selectImage(mobber))
-  disableBtn.addEventListener('click', _ => toggleMobberDisabled(mobber))
-  rmBtn.addEventListener('click', _ => ipc.send('removeMobber', mobber))
+  imgEl.addEventListener('click', () => selectImage(mobber))
+  disableBtn.addEventListener('click', () => toggleMobberDisabled(mobber))
+  rmBtn.addEventListener('click', () => ipc.send('removeMobber', mobber))
 
   return el
 }
@@ -57,7 +60,7 @@ function selectImage(mobber) {
   var image = dialog.showOpenDialog({
     title: 'Select image',
     filters: [
-      {name: 'Images', extensions: ['jpg', 'png', 'gif']}
+      { name: 'Images', extensions: ['jpg', 'png', 'gif'] }
     ],
     properties: ['openFile']
   })
@@ -98,9 +101,13 @@ ipc.on('configUpdated', (event, data) => {
   customSoundEl.value = data.alertSound
 
   timerAlwaysOnTopCheckbox.checked = data.timerAlwaysOnTop
+  shuffleMobbersOnStartupCheckbox.checked = data.shuffleMobbersOnStartup
+  clearClipboardHistoryOnTurnEndCheckbox.checked = data.clearClipboardHistoryOnTurnEnd
+  numberOfItemsClipboardHistoryStores.value = data.numberOfItemsClipboardHistoryStores
+  numberOfItemsClipboardHistoryStores.disabled = !clearClipboardHistoryOnTurnEndCheckbox.checked
 })
 
-minutesEl.addEventListener('change', _ => {
+minutesEl.addEventListener('change', () => {
   ipc.send('setSecondsPerTurn', minutesEl.value * 60)
 })
 minutesEl.addEventListener('focusout', _ => {
@@ -117,7 +124,12 @@ addMobberForm.addEventListener('submit', event => {
   addEl.value = ''
 })
 
-fullscreenSecondsEl.addEventListener('change', _ => {
+shuffleEl.addEventListener('click', event => {
+  event.preventDefault()
+  ipc.send('shuffleMobbers')
+})
+
+fullscreenSecondsEl.addEventListener('change', () => {
   ipc.send('setSecondsUntilFullscreen', fullscreenSecondsEl.value * 1)
 })
 fullscreenSecondsEl.addEventListener('focusout', _ => {
@@ -142,7 +154,7 @@ breakDurationEl.addEventListener('focusout', _ => {
 
 ipc.send('configWindowReady')
 
-snapToEdgesCheckbox.addEventListener('change', _ => {
+snapToEdgesCheckbox.addEventListener('change', () => {
   ipc.send('setSnapThreshold', snapToEdgesCheckbox.checked ? 25 : 0)
 })
 
@@ -180,14 +192,14 @@ function updateAlertControls() {
   replayAudioAfterSeconds.disabled = secondsDisabled
 }
 
-useCustomSoundCheckbox.addEventListener('change', _ => {
+useCustomSoundCheckbox.addEventListener('change', () => {
   let mp3 = null
 
   if (useCustomSoundCheckbox.checked) {
-    selectedMp3 = dialog.showOpenDialog({
+    const selectedMp3 = dialog.showOpenDialog({
       title: 'Select alert sound',
       filters: [
-        {name: 'MP3', extensions: ['mp3']}
+        { name: 'MP3', extensions: ['mp3'] }
       ],
       properties: ['openFile']
     })
@@ -202,6 +214,19 @@ useCustomSoundCheckbox.addEventListener('change', _ => {
   ipc.send('setAlertSound', mp3)
 })
 
-timerAlwaysOnTopCheckbox.addEventListener('change', _ => {
+timerAlwaysOnTopCheckbox.addEventListener('change', () => {
   ipc.send('setTimerAlwaysOnTop', timerAlwaysOnTopCheckbox.checked)
+})
+
+shuffleMobbersOnStartupCheckbox.addEventListener('change', () => {
+  ipc.send('setShuffleMobbersOnStartup', shuffleMobbersOnStartupCheckbox.checked)
+})
+
+clearClipboardHistoryOnTurnEndCheckbox.addEventListener('change', () => {
+  numberOfItemsClipboardHistoryStores.disabled = !clearClipboardHistoryOnTurnEndCheckbox.checked
+  ipc.send('setClearClipboardHistoryOnTurnEnd', clearClipboardHistoryOnTurnEndCheckbox.checked)
+})
+
+numberOfItemsClipboardHistoryStores.addEventListener('change', () => {
+  ipc.send('setNumberOfItemsClipboardHistoryStores', Math.floor(numberOfItemsClipboardHistoryStores.value) > 0 ? Math.floor(numberOfItemsClipboardHistoryStores.value) : 1)
 })

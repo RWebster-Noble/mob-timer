@@ -45,7 +45,7 @@ ipc.on('rotated', (event, data) => {
     data.next = data.current
   }
   nextEl.innerHTML = data.next.name
-  nextPicEl.src = data.next.image || "../img/sad-cyclops.png"
+  nextPicEl.src = data.next.image || '../img/sad-cyclops.png'
 })
 
 ipc.on('timerChange', (event, data) => {

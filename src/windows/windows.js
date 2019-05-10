@@ -1,5 +1,7 @@
 const electron = require('electron')
+const { app } = electron
 const windowSnapper = require('./window-snapper')
+const path = require('path')
 
 let timerWindows, configWindow, fullscreenWindows
 let snapThreshold, secondsUntilFullscreen, timerAlwaysOnTop
@@ -35,7 +37,7 @@ function openTimerWindow(display, parent){
     resizable: false,
     alwaysOnTop: timerAlwaysOnTop,
     frame: false,
-    icon: __dirname + '/../../src/windows/img/icon.png',
+    icon: path.join(__dirname, '/../../src/windows/img/icon.png'),
     parent: parent,
     show: false
   })
@@ -53,14 +55,7 @@ function openTimerWindow(display, parent){
     }
   })
 
-  let getCenter = bounds => {
-    return {
-      x: bounds.x + (bounds.width / 2),
-      y: bounds.y + (bounds.height / 2)
-    }
-  }
-
-  timerWindow.on('move', e => {
+  timerWindow.on('move', () => {
     if (snapThreshold <= 0) {
       return
     }
@@ -76,7 +71,7 @@ function openTimerWindow(display, parent){
     let screenBounds = electron.screen.getDisplayNearestPoint(getCenter(windowBounds)).workArea
 
     let snapTo = windowSnapper(windowBounds, screenBounds, snapThreshold)
-    if (snapTo.x != windowBounds.x || snapTo.y != windowBounds.y) {
+    if (snapTo.x !== windowBounds.x || snapTo.y !== windowBounds.y) {
       timerWindow.setPosition(snapTo.x, snapTo.y)
     }
   })
@@ -128,7 +123,7 @@ exports.createConfigWindow = () => {
   })
 
   configWindow.loadURL(`file://${__dirname}/config/index.html`)
-  configWindow.on('closed', _ => configWindow = null)
+  configWindow.on('closed', () => (configWindow = null))
 }
 
 exports.createFullscreenWindow = () => {
@@ -142,14 +137,14 @@ exports.createFullscreenWindow = () => {
 
     let { x, y } = display.bounds
 
-    let window = new electron.BrowserWindow({
+    let window = createAlwaysOnTopFullscreenInterruptingWindow({
       x,
       y,
-      fullscreen: true,
-      resizable: false,
-      alwaysOnTop: true,
-      frame: false,
-      show: false
+      // fullscreen: true,
+      // resizable: false,
+      // alwaysOnTop: true,
+      // frame: false,
+      // show: false
     })
   
     window.once('ready-to-show', () => {
@@ -187,7 +182,7 @@ exports.dispatchEvent = (event, data) => {
   if (event === 'configUpdated') {
     exports.setConfigState(data)
   }
-  if (event === 'alert' && data == secondsUntilFullscreen) {
+  if (event === 'alert' && data === secondsUntilFullscreen) {
     exports.createFullscreenWindow()
   }
   if (event === 'stopAlerts') {
@@ -222,4 +217,25 @@ exports.setConfigState = data => {
       timerWindow.setAlwaysOnTop(timerAlwaysOnTop)
     });
   }
+}
+
+function createAlwaysOnTopFullscreenInterruptingWindow(options) {
+  return whileAppDockHidden(() => {
+    const window = new electron.BrowserWindow(options)
+    window.setAlwaysOnTop(true, 'screen-saver')
+    return window
+  })
+}
+
+function whileAppDockHidden(work) {
+  if (app.dock) {
+    // Mac OS: The window will be able to float above fullscreen windows too
+    app.dock.hide()
+  }
+  const result = work()
+  if (app.dock) {
+    // Mac OS: Show in dock again, window has been created
+    app.dock.show()
+  }
+  return result
 }

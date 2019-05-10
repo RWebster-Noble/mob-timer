@@ -1,5 +1,6 @@
 const Timer = require('./timer')
 const Mobbers = require('./mobbers')
+const clipboard = require('../clipboard')
 
 class TimerState {
   constructor(options) {
@@ -17,6 +18,9 @@ class TimerState {
     this.alertSound = null
     this.alertSoundTimes = []
     this.timerAlwaysOnTop = true
+    this.shuffleMobbersOnStartup = false
+    this.clearClipboardHistoryOnTurnEnd = false
+    this.numberOfItemsClipboardHistoryStores = 25
 
     this.lastBreakTime = Date.now()
 
@@ -35,7 +39,17 @@ class TimerState {
       time: this.secondsPerTurn
     }, secondsRemaining => {
       this.mainTimerTick(secondsRemaining)
-    })
+        if (secondsRemaining < 0) {
+        this.pause()
+        this.rotate()
+        this.callback('turnEnded')
+        this.startAlerts()
+
+        if (this.clearClipboardHistoryOnTurnEnd) {
+          clipboard.clearClipboardHistory(this.numberOfItemsClipboardHistoryStores)
+        }
+
+    }})
 
     this.alertsTimer = new TimerClass({
       countDown: false
@@ -237,8 +251,8 @@ class TimerState {
   }
 
   removeMobber(mobber) {
-    let currentMobber = this.getCurrentAndNextMobbers().current
-    let isRemovingCurrentMobber = currentMobber ? currentMobber.name == mobber.name : false
+    let currentMobber = this.mobbers.getCurrentAndNextMobbers().current
+    let isRemovingCurrentMobber = currentMobber ? currentMobber.name === mobber.name : false
 
     this.mobbers.removeMobber(mobber)
 
@@ -253,7 +267,17 @@ class TimerState {
   }
 
   updateMobber(mobber) {
+    const currentMobber = this.mobbers.getCurrentAndNextMobbers().current
+    const disablingCurrentMobber = (currentMobber.id === mobber.id && mobber.disabled)
+
     this.mobbers.updateMobber(mobber)
+
+    if (disablingCurrentMobber) {
+      this.pause()
+      this.reset()
+      this.callback('turnEnded')
+    }
+
     this.publishConfig()
   }
 
@@ -303,6 +327,26 @@ class TimerState {
     this.publishConfig()
   }
 
+  setShuffleMobbersOnStartup(value) {
+    this.shuffleMobbersOnStartup = value
+    this.publishConfig()
+  }
+
+  shuffleMobbers() {
+    this.mobbers.shuffleMobbers()
+    this.publishConfig()
+  }
+
+  setClearClipboardHistoryOnTurnEnd(value) {
+    this.clearClipboardHistoryOnTurnEnd = value
+    this.publishConfig()
+  }
+
+  setNumberOfItemsClipboardHistoryStores(value) {
+    this.numberOfItemsClipboardHistoryStores = value
+    this.publishConfig()
+  }
+
   getState() {
     return {
       mobbers: this.mobbers.getAll(),
@@ -315,6 +359,9 @@ class TimerState {
       alertSound: this.alertSound,
       alertSoundTimes: this.alertSoundTimes,
       timerAlwaysOnTop: this.timerAlwaysOnTop,
+      shuffleMobbersOnStartup: this.shuffleMobbersOnStartup,
+      clearClipboardHistoryOnTurnEnd: this.clearClipboardHistoryOnTurnEnd,
+      numberOfItemsClipboardHistoryStores: this.numberOfItemsClipboardHistoryStores,
       timerOnTopBecausePaused: !this.mainTimer.isRunning(),
       breakStartsAtTime: this.breakStartsAtTime()
     }
@@ -348,6 +395,9 @@ class TimerState {
     if (typeof state.timerAlwaysOnTop === 'boolean') {
       this.timerAlwaysOnTop = state.timerAlwaysOnTop
     }
+    this.shuffleMobbersOnStartup = !!state.shuffleMobbersOnStartup
+    this.clearClipboardHistoryOnTurnEnd = !!state.clearClipboardHistoryOnTurnEnd
+    this.numberOfItemsClipboardHistoryStores = Math.floor(state.numberOfItemsClipboardHistoryStores) > 0 ? Math.floor(state.numberOfItemsClipboardHistoryStores) : 1
   }
 }
 

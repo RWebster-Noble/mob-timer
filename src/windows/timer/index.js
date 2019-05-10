@@ -34,7 +34,7 @@ function clearCanvas() {
 function drawTimerCircle() {
   const begin = 0
   const end = 2 * Math.PI
-  drawArc(begin, end, "#EEEEEE")
+  drawArc(begin, end, '#EEEEEE')
 }
 
 function drawArc(begin, end, color) {
@@ -50,17 +50,17 @@ function drawArc(begin, end, color) {
 
 function drawTimerArc(seconds, maxSeconds) {
   let percent = 1 - (seconds / maxSeconds)
-  if (percent == 0) {
+  if (percent === 0) {
     return
   }
-  let begin = -(.5 * Math.PI)
+  let begin = -(0.5 * Math.PI)
   let end = begin + (2 * Math.PI * percent)
   drawArc(begin, end, theme.mobberBorderHighlightColor)
 }
 
 ipc.on('rotated', (event, data) => {
   if (!data.current) {
-    data.current = { name: "Add a mobber" }
+    data.current = { name: 'Add a mobber' }
   }
 
   if (data.onbreak) {
@@ -75,28 +75,28 @@ ipc.on('rotated', (event, data) => {
   if (!data.next) {
     data.next = data.current
   }
-  nextPicEl.src = data.next.image || "../img/sad-cyclops.png"
+  nextPicEl.src = data.next.image || '../img/sad-cyclops.png'
   nextEl.innerHTML = data.next.name
 })
 
-ipc.on('paused', _ => {
+ipc.on('paused', () => {
   paused = true
-  container.classList.add('isPaused')
+  containerEl.classList.add('isPaused')
   toggleBtn.classList.add('play')
   toggleBtn.classList.remove('pause')
 })
 
-ipc.on('started', _ => {
+ipc.on('started', () => {
   paused = false
-  container.classList.remove('isPaused')
+  containerEl.classList.remove('isPaused')
   containerEl.classList.remove('isTurnEnded')
   toggleBtn.classList.remove('play')
   toggleBtn.classList.add('pause')
 })
 
-ipc.on('turnEnded', (event, data) => {
+ipc.on('turnEnded', () => {
   paused = true
-  container.classList.remove('isPaused')
+  containerEl.classList.remove('isPaused')
   containerEl.classList.add('isTurnEnded')
   toggleBtn.classList.add('play')
   toggleBtn.classList.remove('pause')
@@ -118,11 +118,11 @@ ipc.on('alert', (event, data) => {
   }
 })
 
-ipc.on('stopAlerts', _ => {
+ipc.on('stopAlerts', () => {
   alertAudio.pause()
 })
 
-toggleBtn.addEventListener('click', _ => {
+toggleBtn.addEventListener('click', () => {
   paused ? ipc.send('unpause') : ipc.send('pause')
 })
 nextBtn.addEventListener('click', _ => ipc.send('skip'))
