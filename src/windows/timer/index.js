@@ -14,6 +14,7 @@ const timerCanvas = document.getElementById('timerCanvas')
 const alertAudio = document.getElementById('alertAudio')
 const breakP = document.getElementById('nextBreakText')
 const breakTimeSpn = document.getElementById('breakTime')
+const breakNowA = document.getElementById('breakNowLink')
 
 const context = timerCanvas.getContext('2d')
 
@@ -64,7 +65,7 @@ ipc.on('rotated', (event, data) => {
 
   if (data.onbreak) {
     currentEl.innerHTML = "Break!"    
-    currentPicEl.src = "../img/sad-cyclops.png"
+    currentPicEl.src = "../img/kitKat.jpg"
   }
   else {
     currentPicEl.src = data.current.image || "../img/sad-cyclops.png"
@@ -126,5 +127,6 @@ toggleBtn.addEventListener('click', _ => {
 })
 nextBtn.addEventListener('click', _ => ipc.send('skip'))
 configureBtn.addEventListener('click', _ => ipc.send('configure'))
+breakNowA.addEventListener('click', _ => ipc.send('takeABreakNow'))
 
 ipc.send('timerWindowReady')

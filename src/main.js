@@ -1,4 +1,4 @@
-const electron = require('electron')
+ const electron = require('electron')
 const { app, ipcMain: ipc } = electron
 
 let windows = require('./windows/windows')
@@ -29,6 +29,7 @@ ipc.on('fullscreenWindowReady', _ => timerState.publishConfig())
 ipc.on('pause', _ => timerState.pause())
 ipc.on('unpause', _ => timerState.start())
 ipc.on('skip', _ => timerState.rotateOrBreak())
+ipc.on('takeABreakNow', _ => timerState.startBreak())
 ipc.on('startTurn', _ => timerState.start())
 ipc.on('configure', _ => {
   windows.showConfigWindow()

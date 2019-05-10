@@ -12,6 +12,8 @@ const sitMessage = document.getElementById('sitMessage')
 const timerCanvas = document.getElementById('timerCanvas')
 const breakTimeDiv = document.getElementById('breakTimeContainer')
 const breakTimeSpn = document.getElementById('breakTime')
+const takeABreakDiv = document.getElementById('takeABreakcontainer')
+const takeABreakBtn = document.getElementById('takeABreak')
 
 timerCanvas.hidden = true;
 
@@ -24,10 +26,12 @@ ipc.on('rotated', (event, data) => {
 
   if (data.onbreak) {
     currentEl.innerHTML = "Break!"
-    currentPicEl.src = "../img/sad-cyclops.png"
-    startTurnBtn.innerHTML = "Defer"
+    currentPicEl.src = "../img/kitKat.jpg"
+    startTurnBtn.innerHTML = "Postpone"
     sitMessage.hidden = true
     timerCanvas.hidden = false;
+    breakTimeDiv.style.display = "none" 
+    takeABreakDiv.style.display = "none"
   }
   else {
     currentEl.innerHTML = data.current.name
@@ -51,7 +55,10 @@ ipc.on('timerChange', (event, data) => {
 })
 
 ipc.on('configUpdated', (event, data) => {  
-  breakTimeDiv.style.display = data.breakEnabled && data.breakStartsAtTime != -1 ? "" : "none" 
+  const showBreak = data.breakEnabled && data.breakStartsAtTime != -1 ? "" : "none";
+
+  breakTimeDiv.style.display = showBreak 
+  takeABreakDiv.style.display = showBreak
   
   breakTimeSpn.innerText = new Date(data.breakStartsAtTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 })
@@ -94,5 +101,6 @@ function drawTimerArc(seconds, maxSeconds) {
 skipBtn.addEventListener('click', _ => ipc.send('skip'))
 startTurnBtn.addEventListener('click', _ => ipc.send('startTurn'))
 configureBtn.addEventListener('click', _ => ipc.send('configure'))
+takeABreakBtn.addEventListener('click', _ => ipc.send('takeABreakNow'))
 
 ipc.send('fullscreenWindowReady')

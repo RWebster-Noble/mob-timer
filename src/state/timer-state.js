@@ -196,13 +196,15 @@ class TimerState {
     if (this.breakTimer.isRunning()) {
       currAndNext.current = {
         id: null,
-        name: "Break!"
+        name: "Break!",
+        image: "../img/kitKat.jpg"
       }
     }
     else if (this.breakNextTurn()) {
       currAndNext.next = {
         id: null,
         name: "Break!",
+        image: "../img/kitKat.jpg",
         break: true
       }
     }

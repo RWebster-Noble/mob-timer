@@ -12,7 +12,7 @@ body {
 
 .container {
   position: relative;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .button {
@@ -143,15 +143,24 @@ body {
 }
 
 .isTurnEnded {
-  animation-duration: 1s;
-  animation-name: pulse;
-  animation-iteration-count: infinite;
   color: var(--timer-pulse-text-color);
 }
 
 .isPaused {
   color: var(--timer-paused-text-color);
   background: var(--timer-paused-background-color);
+}
+
+.isTurnEnded .bg-color {
+  animation-duration: 1s;
+  animation-name: pulse;
+  animation-iteration-count: infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 
 audio {
@@ -168,4 +177,9 @@ audio {
   position: absolute;
   right: 30px;
   top: 8px;
+}
+
+.breakNowLink{
+  cursor: pointer;
+  text-decoration: underline;
 }

@@ -10,6 +10,9 @@
 <body>
 
   <div id="container" class="container">
+    <div class="bg-color">
+
+    </div>
     <div class="timerContainer">
       <img id="currentPic" class="pic currentPic" />
       <canvas id="timerCanvas" class="timerCanvas" width="160" height="160"></canvas>
@@ -21,14 +24,15 @@
     <button id="configureButton" class="button configure" title="Configure"></button>
 
     <div class="breakTextContainer">
-      <p id="nextBreakText" class="break">Break at <span id="breakTime"></span></p>
+      <p id="nextBreakText" class="break"><a id="breakNowLink" class="breakNowLink">Break</a> at <span id="breakTime"></span></p>
     </div>
 
     <div class="nextContainer">
-      <img id="nextPic" class="next" />
+      <img id="nextPic" class="next" /> 
       <div id="nextButton" class="button overlay next"></div>
       <span id="next">{name}</span>
     </div>
+
   </div>
 
   <audio controls id="alertAudio">
