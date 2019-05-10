@@ -205,14 +205,14 @@ class TimerState {
       currAndNext.current = {
         id: null,
         name: "Break!",
-        image: "../img/kitKat.jpg"
+        image: "../img/coffee.png",
       }
     }
     else if (this.breakNextTurn()) {
       currAndNext.next = {
         id: null,
         name: "Break!",
-        image: "../img/kitKat.jpg",
+        image: "../img/coffee.png",
         break: true
       }
     }

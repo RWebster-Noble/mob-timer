@@ -65,7 +65,7 @@ ipc.on('rotated', (event, data) => {
 
   if (data.onbreak) {
     currentEl.innerHTML = "Break!"    
-    currentPicEl.src = "../img/kitKat.jpg"
+    currentPicEl.src = "../img/coffee.png"
   }
   else {
     currentPicEl.src = data.current.image || "../img/sad-cyclops.png"

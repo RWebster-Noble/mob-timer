@@ -26,7 +26,7 @@ ipc.on('rotated', (event, data) => {
 
   if (data.onbreak) {
     currentEl.innerHTML = "Break!"
-    currentPicEl.src = "../img/kitKat.jpg"
+    currentPicEl.src = "../img/break.png"
     startTurnBtn.innerHTML = "Postpone"
     sitMessage.hidden = true
     timerCanvas.hidden = false;

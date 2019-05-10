@@ -4,12 +4,26 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  -webkit-app-region: drag;
   user-select: none;
   color: var(--main-text-color);
   background-color: var(--main-background-color);
 }
+.drag-handle {
+  width: 20px;
+  height: 20px;
+  position: fixed;
+  top: 0px;
+  left: 0px; 
+  background-size: cover;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGQ9Ik0yNC42LDYzLjJjMS40LDEuNSwzLjgsMS42LDUuMywwLjJzMS42LTMuOCwwLjItNS4zYy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMmwtNC4yLTQuMmgyMXYyMWwtNC4yLTQuMiAgYy0xLjQtMS41LTMuOC0xLjYtNS4zLTAuMmMtMS41LDEuNC0xLjYsMy44LTAuMiw1LjNjMC4xLDAuMSwwLjEsMC4xLDAuMiwwLjJsMTAuNiwxMC42YzEuNSwxLjUsMy44LDEuNSw1LjMsMGwxMC41LTEwLjYgIGMxLjUtMS40LDEuNi0zLjgsMC4yLTUuM2MtMS40LTEuNS0zLjgtMS42LTUuMy0wLjJjLTAuMSwwLjEtMC4xLDAuMS0wLjIsMC4ybC00LjIsNC4ydi0yMWgyMUw3MSw1Ny45Yy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuMyAgYzEuNCwxLjUsMy44LDEuNiw1LjMsMC4yYzAuMS0wLjEsMC4xLTAuMSwwLjItMC4ybDEwLjYtMTAuNmMxLjUtMS41LDEuNS0zLjgsMC01LjNMNzYuMiwzNi43Yy0xLjQtMS41LTMuOC0xLjYtNS4zLTAuMiAgYy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuM2MwLjEsMC4xLDAuMSwwLjEsMC4yLDAuMmw0LjIsNC4yaC0yMXYtMjFsNC4yLDQuMmMxLjQsMS41LDMuOCwxLjYsNS4zLDAuMnMxLjYtMy44LDAuMi01LjMgIGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjJMNTMuMSwxMy42Yy0xLjUtMS41LTMuOC0xLjUtNS4zLDBMMzcuMiwyNC4yYy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuM2MxLjQsMS41LDMuOCwxLjYsNS4zLDAuMiAgYzAuMS0wLjEsMC4xLTAuMSwwLjItMC4ybDQuMi00LjJ2MjFoLTIxbDQuMi00LjJjMS41LTEuNCwxLjYtMy44LDAuMi01LjNjLTEuNC0xLjUtMy44LTEuNi01LjMtMC4yYy0wLjEsMC4xLTAuMSwwLjEtMC4yLDAuMiAgTDE0LDQ3LjNjLTEuNSwxLjUtMS41LDMuOCwwLDUuM0wyNC42LDYzLjJ6Ij48L3BhdGg+PC9zdmc+");
+  -webkit-app-region: drag;
+  cursor: pointer;
+  opacity: .5;
+}
 
+.drag-handle:hover {
+  opacity: .7;
+}
 .container {
   position: relative;
   /* height: 100vh; */
@@ -77,7 +91,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 120px;
+  width: 120px;  
 }
 
 .nextContainer {
@@ -143,7 +157,7 @@ body {
 }
 
 .isTurnEnded {
-  color: var(--timer-pulse-text-color);
+  color: var(--timer-pulse-text-color);  
 }
 
 .isPaused {
@@ -160,7 +174,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: -1;  
 }
 
 audio {

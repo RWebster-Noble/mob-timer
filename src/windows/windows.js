@@ -140,11 +140,11 @@ exports.createFullscreenWindow = () => {
     let window = createAlwaysOnTopFullscreenInterruptingWindow({
       x,
       y,
-      // fullscreen: true,
-      // resizable: false,
-      // alwaysOnTop: true,
-      // frame: false,
-      // show: false
+      fullscreen: true,
+      resizable: false,
+      alwaysOnTop: true,
+      frame: false,
+      show: false
     })
   
     window.once('ready-to-show', () => {
