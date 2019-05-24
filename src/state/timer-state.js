@@ -117,7 +117,12 @@ class TimerState {
     }
   }
 
-  startBreak() {
+  startBreak() {    
+    if(this.breakTimer.isRunning()){
+        this.callback('alert', true)
+        return
+      }
+
     this.breakTimer.reset(this.breakDurationSeconds)
     this.breakTimer.start()
     this.mainTimer.pause()
