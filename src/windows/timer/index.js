@@ -106,7 +106,7 @@ ipc.on('configUpdated', (event, data) => {
   alertSoundTimes = data.alertSoundTimes
   alertAudio.src = data.alertSound || './default.mp3'
 
-  breakP.style.display = data.breakEnabled && data.breakStartsAtTime != -1 ? "" : "none"
+  breakP.style.display = data.breakEnabled ? "" : "none"
 
   breakTimeSpn.innerText = new Date(data.breakStartsAtTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 })
