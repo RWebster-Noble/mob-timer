@@ -21,6 +21,8 @@ const context = timerCanvas.getContext('2d')
 let paused = true
 let alertSoundTimes = []
 
+let onBreak = false
+
 ipc.on('timerChange', (event, data) => {
   clearCanvas()
   drawTimerCircle()
@@ -59,6 +61,7 @@ function drawTimerArc(seconds, maxSeconds) {
 }
 
 ipc.on('rotated', (event, data) => {
+  onBreak = data.onbreak
   if (!data.current) {
     data.current = { name: 'Add a mobber' }
   }
@@ -122,11 +125,9 @@ ipc.on('stopAlerts', () => {
   alertAudio.pause()
 })
 
-toggleBtn.addEventListener('click', () => {
-  paused ? ipc.send('unpause') : ipc.send('pause')
-})
-nextBtn.addEventListener('click', _ => ipc.send('skip'))
+toggleBtn.addEventListener('click', _ => onBreak ? ipc.send('takeABreakNow') : (paused ? ipc.send('unpause') : ipc.send('pause')))
+nextBtn.addEventListener('click', _ => onBreak ? ipc.send('takeABreakNow') : ipc.send('skip'))
 configureBtn.addEventListener('click', _ => ipc.send('configure'))
-breakNowA.addEventListener('click', _ => ipc.send('takeABreakNow'))
+breakNowA.addEventListener('click', _ => onBreak ? ipc.send('takeABreakNow') : ipc.send('takeABreakNow'))
 
 ipc.send('timerWindowReady')
