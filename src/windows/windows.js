@@ -70,8 +70,17 @@ function openTimerWindow(display, parent){
     let windowBounds = timerWindow.getBounds()
     let screenBounds = electron.screen.getDisplayNearestPoint(getCenter(windowBounds)).workArea
 
+    if(timerWindow.snappedDist){
+      // compute snapping from window position as it would be if it hadn't already been snapped
+      windowBounds.x -= timerWindow.snappedDist.x
+      windowBounds.y -= timerWindow.snappedDist.y
+    }
+
     let snapTo = windowSnapper(windowBounds, screenBounds, snapThreshold)
     if (snapTo.x !== windowBounds.x || snapTo.y !== windowBounds.y) {
+      timerWindow.snappedDist = {}
+      timerWindow.snappedDist.x = windowBounds.x - snapTo.x
+      timerWindow.snappedDist.y = windowBounds.y - snapTo.y
       timerWindow.setPosition(snapTo.x, snapTo.y)
     }
   })
