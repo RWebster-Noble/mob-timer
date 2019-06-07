@@ -70,7 +70,7 @@ class TimerState {
   mainTimerDone() {
     this.pause()
     if (this.shouldBeOnBreak()) {
-      this.startBreak()
+      this.startBreak(false)
     } else {
       this.rotateOrBreak()
       this.callback('turnEnded')
@@ -117,11 +117,12 @@ class TimerState {
     }
   }
 
-  startBreak() {    
-    if(this.breakTimer.isRunning()){
-        this.callback('alert', true)
-        return
-      }
+  startBreak(immediately) {    
+    if(immediately){
+      this.callback('alert', true)
+      if(this.breakTimer.isRunning())
+        return        
+    }
 
     this.breakTimer.reset(this.breakDurationSeconds)
     this.breakTimer.start()
@@ -182,7 +183,7 @@ class TimerState {
 
   rotateOrBreak() {
     if (this.nextMobber.break) {
-      this.startBreak()
+      this.startBreak(false)
       this.startAlerts()
       this.publishConfig()
       return;
