@@ -67,6 +67,8 @@ ipc.on('rotated', (event, data) => {
   }
 
   if (data.onbreak) {
+    start()
+    breakP.style.display = "none"
     currentEl.innerHTML = "Break!"    
     currentPicEl.src = "../img/coffee.png"
   }
@@ -89,13 +91,15 @@ ipc.on('paused', () => {
   toggleBtn.classList.remove('pause')
 })
 
-ipc.on('started', () => {
+ipc.on('started', start)
+function start()
+{
   paused = false
   containerEl.classList.remove('isPaused')
   containerEl.classList.remove('isTurnEnded')
   toggleBtn.classList.remove('play')
   toggleBtn.classList.add('pause')
-})
+}
 
 ipc.on('turnEnded', () => {
   paused = true
