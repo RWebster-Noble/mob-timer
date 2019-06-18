@@ -71,17 +71,30 @@ function openTimerWindow(display, parent){
     let screenBounds = electron.screen.getDisplayNearestPoint(getCenter(windowBounds)).workArea
 
     if(timerWindow.snappedDist){
-      // compute snapping from window position as it would be if it hadn't already been snapped
+      // set windowBounds to origional position from before snapping
+      // as to do snapping calculation on window position as it would be if it hadn't already been snapped
       windowBounds.x -= timerWindow.snappedDist.x
       windowBounds.y -= timerWindow.snappedDist.y
     }
 
     let snapTo = windowSnapper(windowBounds, screenBounds, snapThreshold)
     if (snapTo.x !== windowBounds.x || snapTo.y !== windowBounds.y) {
+      // perform snapping
       timerWindow.snappedDist = {}
       timerWindow.snappedDist.x = windowBounds.x - snapTo.x
       timerWindow.snappedDist.y = windowBounds.y - snapTo.y
       timerWindow.setPosition(snapTo.x, snapTo.y)
+    }
+    else if(timerWindow.snappedDist) // just stopped snapping
+    {      
+      // return to original position before snapping
+
+      // timerWindow.setPosition triggers an timerWindow.on('move') call, making this code recursive. 
+      // this neeeds to be here to break the recursion and stop unexpected behaivour.
+      timerWindow.snappedDist = null
+
+      // windowBounds will have been set to origional position from before snapping
+      timerWindow.setPosition(windowBounds.x, windowBounds.y)
     }
   })
 
@@ -149,11 +162,11 @@ exports.createFullscreenWindow = () => {
     let window = createAlwaysOnTopFullscreenInterruptingWindow({
       x,
       y,
-      fullscreen: true,
-      resizable: false,
-      alwaysOnTop: true,
-      frame: false,
-      show: false
+      // fullscreen: true,
+      // resizable: false,
+      // alwaysOnTop: true,
+      // frame: false,
+      // show: false
     })
   
     window.once('ready-to-show', () => {
