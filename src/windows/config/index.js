@@ -21,6 +21,7 @@ const timerAlwaysOnTopCheckbox = document.getElementById('timerAlwaysOnTop')
 const shuffleMobbersOnStartupCheckbox = document.getElementById('shuffleMobbersOnStartup')
 const clearClipboardHistoryOnTurnEndCheckbox = document.getElementById('clearClipboardHistoryOnTurnEnd')
 const numberOfItemsClipboardHistoryStores = document.getElementById('numberOfItemsClipboardHistoryStores')
+const gitIntegrationEnabledCheckbox = document.getElementById('gitIntegrationEnabled')
 
 function createMobberEl(mobber) {
   const el = document.createElement('div')
@@ -105,6 +106,7 @@ ipc.on('configUpdated', (event, data) => {
   clearClipboardHistoryOnTurnEndCheckbox.checked = data.clearClipboardHistoryOnTurnEnd
   numberOfItemsClipboardHistoryStores.value = data.numberOfItemsClipboardHistoryStores
   numberOfItemsClipboardHistoryStores.disabled = !clearClipboardHistoryOnTurnEndCheckbox.checked
+  gitIntegrationEnabledCheckbox.checked = data.gitIntegrationEnabled
 })
 
 minutesEl.addEventListener('change', () => {
@@ -229,4 +231,8 @@ clearClipboardHistoryOnTurnEndCheckbox.addEventListener('change', () => {
 
 numberOfItemsClipboardHistoryStores.addEventListener('change', () => {
   ipc.send('setNumberOfItemsClipboardHistoryStores', Math.floor(numberOfItemsClipboardHistoryStores.value) > 0 ? Math.floor(numberOfItemsClipboardHistoryStores.value) : 1)
+})
+
+gitIntegrationEnabledCheckbox.addEventListener('change', () => {
+  ipc.send('setGitIntegration', gitIntegrationEnabledCheckbox.checked)
 })

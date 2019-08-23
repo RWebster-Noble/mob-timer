@@ -1,5 +1,6 @@
 const Timer = require('./timer')
 const Mobbers = require('./mobbers')
+const GitIntegration = require('../gitIntegration')
 const clipboard = require('../clipboard')
 
 class TimerState {
@@ -25,6 +26,8 @@ class TimerState {
     this.lastBreakTime = Date.now()
 
     this.createTimers(options.Timer || Timer)
+    
+    this.gitIntegration = new GitIntegration(this.mobbers, this.mainTimer)
 
     this.nextMobber = null;
   }
@@ -347,6 +350,11 @@ class TimerState {
     this.publishConfig()
   }
 
+  setGitIntegration(value) {
+    this.gitIntegration.SetGitIntegration(value)
+    this.publishConfig()
+  }
+
   getState() {
     return {
       mobbers: this.mobbers.getAll(),
@@ -363,7 +371,8 @@ class TimerState {
       clearClipboardHistoryOnTurnEnd: this.clearClipboardHistoryOnTurnEnd,
       numberOfItemsClipboardHistoryStores: this.numberOfItemsClipboardHistoryStores,
       timerOnTopBecausePaused: !this.mainTimer.isRunning(),
-      breakStartsAtTime: this.breakStartsAtTime()
+      breakStartsAtTime: this.breakStartsAtTime(),
+      gitIntegrationEnabled: this.gitIntegration.enabled()
     }
   }
 
@@ -398,6 +407,9 @@ class TimerState {
     this.shuffleMobbersOnStartup = !!state.shuffleMobbersOnStartup
     this.clearClipboardHistoryOnTurnEnd = !!state.clearClipboardHistoryOnTurnEnd
     this.numberOfItemsClipboardHistoryStores = Math.floor(state.numberOfItemsClipboardHistoryStores) > 0 ? Math.floor(state.numberOfItemsClipboardHistoryStores) : 1
+    if (typeof state.gitIntegrationEnabled === 'boolean') {
+      this.setGitIntegration(state.gitIntegrationEnabled)
+    }
   }
 }
 
