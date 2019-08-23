@@ -57,6 +57,11 @@ ipc.on('setClearClipboardHistoryOnTurnEnd', (event, value) => timerState.setClea
 ipc.on('setNumberOfItemsClipboardHistoryStores', (event, value) => timerState.setNumberOfItemsClipboardHistoryStores(value))
 ipc.on('setGitIntegration', (event, value) => timerState.setGitIntegration(value))
 
+ipc.on('updateMobberWithoutPublish', (event, mobber) => {
+  timerState.mobbers.updateMobber(mobber)
+  statePersister.write(timerState.getState())
+})
+
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()

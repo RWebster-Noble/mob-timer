@@ -56,34 +56,37 @@ function createMobberEl(frag, mobber) {
 
   const gitNameInput = document.createElement("input")
   gitNameInput.type = "text"
+  gitNameInput.placeholder = "Git Username"
   if (mobber.gitUsername)
     gitNameInput.value = mobber.gitUsername
-  gitNameInput.placeholder = "Git Username"
 
-  gitNameInput.addEventListener('change', () => {
+  gitNameInput.addEventListener('change', _ => {
     mobber.gitUsername = gitNameInput.value
-    ipc.send('updateMobber', mobber)
+    ipc.send('updateMobberWithoutPublish', mobber);
   })
   gitNameInput.addEventListener('focusout', _ => {
     mobber.gitUsername = gitNameInput.value
-    ipc.send('updateMobber', mobber)
+    ipc.send('updateMobberWithoutPublish', mobber);
   })
+
 
   gitDetailsAccordianForm.appendChild(gitNameInput)
   gitDetailsAccordianForm.appendChild(document.createElement('br'))
 
   const gitEmailInput = document.createElement("input")
+  gitEmailInput.classList.add('gitInput')
   gitEmailInput.type = "text"
+  gitEmailInput.placeholder = "Git Email Address"
   if (mobber.gitEmail)
     gitEmailInput.value = mobber.gitEmail
-  gitEmailInput.placeholder = "Git Email Address"
-  gitEmailInput.addEventListener('change', () => {
-    mobber.gitEmail = gitNameInput.value
-    ipc.send('updateMobber', mobber)
+
+  gitEmailInput.addEventListener('change', _ => {
+    mobber.gitEmail = gitEmailInput.value
+    ipc.send('updateMobberWithoutPublish', mobber);
   })
   gitEmailInput.addEventListener('focusout', _ => {
     mobber.gitEmail = gitEmailInput.value
-    ipc.send('updateMobber', mobber)
+    ipc.send('updateMobberWithoutPublish', mobber);
   })
   gitDetailsAccordianForm.appendChild(gitEmailInput)
 
