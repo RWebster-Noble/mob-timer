@@ -34,14 +34,19 @@ class GitIntegration {
             return;
         }
 
-        const activeMobbers = this.mobbers.getActiveMobbers();
-        if (activeMobbers.length == 0) {
+        const activeMobbersWithGitDetails = this.mobbers.getActiveMobbers().filter((m) => {
+            return m.gitUsername && m.gitEmail
+        });
+
+        if (activeMobbersWithGitDetails.length == 0) {
             socket.end();
             return;
         }
-        const activeMobberNames = activeMobbers.map(function (m) {
-            return m.name;
+
+        const activeMobberNames = activeMobbersWithGitDetails.map((m) => {
+            return `${m.gitUsername} <${m.gitEmail}>`;
         });
+
         socket.write("\r\n\r\nCo-authored-by: " + activeMobberNames.join("\r\nCo-authored-by: ") + "\r\n");
         socket.end();
     }

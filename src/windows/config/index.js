@@ -23,7 +23,7 @@ const clearClipboardHistoryOnTurnEndCheckbox = document.getElementById('clearCli
 const numberOfItemsClipboardHistoryStores = document.getElementById('numberOfItemsClipboardHistoryStores')
 const gitIntegrationEnabledCheckbox = document.getElementById('gitIntegrationEnabled')
 
-function createMobberEl(mobber) {
+function createMobberEl(frag, mobber) {
   const el = document.createElement('div')
   el.classList.add('mobber')
   if (mobber.disabled) {
@@ -50,11 +50,64 @@ function createMobberEl(mobber) {
   rmBtn.innerHTML = 'Remove'
   el.appendChild(rmBtn)
 
+  const gitDetailsAccordianForm = document.createElement('form')
+  gitDetailsAccordianForm.classList.add('gitDetailsAccordian')
+  gitDetailsAccordianForm.style.display = "none"
+
+  const gitNameInput = document.createElement("input")
+  gitNameInput.type = "text"
+  if (mobber.gitUsername)
+    gitNameInput.value = mobber.gitUsername
+  gitNameInput.placeholder = "Git Username"
+
+  gitNameInput.addEventListener('change', () => {
+    mobber.gitUsername = gitNameInput.value
+    ipc.send('updateMobber', mobber)
+  })
+  gitNameInput.addEventListener('focusout', _ => {
+    mobber.gitUsername = gitNameInput.value
+    ipc.send('updateMobber', mobber)
+  })
+
+  gitDetailsAccordianForm.appendChild(gitNameInput)
+  gitDetailsAccordianForm.appendChild(document.createElement('br'))
+
+  const gitEmailInput = document.createElement("input")
+  gitEmailInput.type = "text"
+  if (mobber.gitEmail)
+    gitEmailInput.value = mobber.gitEmail
+  gitEmailInput.placeholder = "Git Email Address"
+  gitEmailInput.addEventListener('change', () => {
+    mobber.gitEmail = gitNameInput.value
+    ipc.send('updateMobber', mobber)
+  })
+  gitEmailInput.addEventListener('focusout', _ => {
+    mobber.gitEmail = gitEmailInput.value
+    ipc.send('updateMobber', mobber)
+  })
+  gitDetailsAccordianForm.appendChild(gitEmailInput)
+
+
+  nameEl.addEventListener("click", function () {
+    if (gitIntegrationEnabledCheckbox.checked) {
+      if (gitIntegrationEnabledCheckbox.checked && gitDetailsAccordianForm.style.display === "block") {
+        gitDetailsAccordianForm.style.display = "none";
+      } else {
+        Array.prototype.forEach.call(document.getElementsByClassName("gitDetailsAccordian"), (e) => e.style.display = "none")
+        gitDetailsAccordianForm.style.display = "block";
+      }
+    }
+  })
+
   imgEl.addEventListener('click', () => selectImage(mobber))
   disableBtn.addEventListener('click', () => toggleMobberDisabled(mobber))
   rmBtn.addEventListener('click', () => ipc.send('removeMobber', mobber))
 
-  return el
+  const mobberContainer = document.createElement('div')
+  mobberContainer.classList.add('mobberContainer')
+  mobberContainer.appendChild(el)
+  mobberContainer.appendChild(gitDetailsAccordianForm)
+  frag.appendChild(mobberContainer)
 }
 
 function selectImage(mobber) {
@@ -82,7 +135,7 @@ ipc.on('configUpdated', (event, data) => {
   mobbersEl.innerHTML = ''
   const frag = document.createDocumentFragment()
   data.mobbers.map(mobber => {
-    frag.appendChild(createMobberEl(mobber))
+    createMobberEl(frag, mobber)
   })
   mobbersEl.appendChild(frag)
   fullscreenSecondsEl.value = data.secondsUntilFullscreen

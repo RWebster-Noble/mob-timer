@@ -39,7 +39,7 @@ input {
   border: 2px solid var(--mobber-border-highlight-color);
 }
 
-.mobber:nth-child(odd) {
+.mobberContainer:nth-child(odd) {
   background-color: var(--table-stripe-color);
 }
 
@@ -115,4 +115,11 @@ input[type="checkbox" i] {
 
 .clipboard-history-items {
   width: 40px;
+}
+
+.gitDetails {
+  padding: 0 18px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
 }
