@@ -1,13 +1,15 @@
- const electron = require('electron')
+const electron = require('electron')
 const { app, ipcMain: ipc } = electron
 
 let windows = require('./windows/windows')
 let TimerState = require('./state/timer-state')
 let statePersister = require('./state/state-persister')
+let net = require('net');
 
 let timerState = new TimerState()
 
 app.on('ready', () => {
+
   timerState.setCallback(onTimerEvent)
   timerState.loadState(statePersister.read())
   windows.setConfigState(timerState.getState())
@@ -15,7 +17,37 @@ app.on('ready', () => {
   if (timerState.getState().shuffleMobbersOnStartup) {
     timerState.shuffleMobbers()
   }
+
+  startCommitMessageServer();
+
 })
+
+function startCommitMessageServer() {
+  const server = net.createServer(function (socket) {
+    if (!timerState.mainTimer.isRunning()) {
+      socket.end();
+      return;
+    }
+
+    const activeMobbers = timerState.mobbers.getActiveMobbers();
+    if (activeMobbers.length == 0) {
+      socket.end();
+      return;
+    }
+
+    const activeMobberNames = activeMobbers.map(function (m) {
+      return m.name;
+    });
+    
+    socket.write("\r\n\r\nCo-authored-by: " + activeMobberNames.join("\r\nCo-authored-by: ") + "\r\n");
+    socket.end();
+  });
+
+  // server.on('error', (e) => {
+  // });
+
+  server.listen(6904, '127.0.0.1');
+}
 
 function onTimerEvent(event, data) {
   windows.dispatchEvent(event, data)
@@ -55,12 +87,12 @@ ipc.on('setShuffleMobbersOnStartup', (event, value) => timerState.setShuffleMobb
 ipc.on('setClearClipboardHistoryOnTurnEnd', (event, value) => timerState.setClearClipboardHistoryOnTurnEnd(value))
 ipc.on('setNumberOfItemsClipboardHistoryStores', (event, value) => timerState.setNumberOfItemsClipboardHistoryStores(value))
 
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
-app.on('activate', function() {
+app.on('activate', function () {
   windows.createTimerWindow()
 })
