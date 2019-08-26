@@ -24,7 +24,7 @@ const numberOfItemsClipboardHistoryStores = document.getElementById('numberOfIte
 const gitIntegrationEnabledCheckbox = document.getElementById('gitIntegrationEnabled')
 const gitIntegrationPortEl = document.getElementById('gitIntegrationPort')
 
-function createMobberEl(frag, mobber) {
+function createMobberEl(frag, mobber, gitIntegrationEnabled) {
   const el = document.createElement('div')
   el.classList.add('mobber')
   if (mobber.disabled) {
@@ -36,7 +36,7 @@ function createMobberEl(frag, mobber) {
   imgEl.classList.add('image')
   el.appendChild(imgEl)
 
-  const nameEl = document.createElement('div')
+  const nameEl = document.createElement(gitIntegrationEnabled ? 'a' : 'div')
   nameEl.innerHTML = mobber.name
   nameEl.classList.add('name')
   el.appendChild(nameEl)
@@ -51,67 +51,77 @@ function createMobberEl(frag, mobber) {
   rmBtn.innerHTML = 'Remove'
   el.appendChild(rmBtn)
 
-  const gitDetailsAccordianForm = document.createElement('form')
-  gitDetailsAccordianForm.classList.add('git-details')
-  gitDetailsAccordianForm.style.display = "none"
-
-  const gitNameInput = document.createElement("input")
-  gitNameInput.classList.add('git-input')
-  gitNameInput.type = "text"
-  gitNameInput.placeholder = "Git Username"
-  if (mobber.gitUsername)
-    gitNameInput.value = mobber.gitUsername
-
-  gitNameInput.addEventListener('change', _ => {
-    mobber.gitUsername = gitNameInput.value
-    ipc.send('updateMobberWithoutPublish', mobber);
-  })
-  gitNameInput.addEventListener('focusout', _ => {
-    mobber.gitUsername = gitNameInput.value
-    ipc.send('updateMobberWithoutPublish', mobber);
-  })
-
-
-  gitDetailsAccordianForm.appendChild(gitNameInput)
-  gitDetailsAccordianForm.appendChild(document.createElement('br'))
-
-  const gitEmailInput = document.createElement("input")
-  gitEmailInput.classList.add('git-input')
-  gitEmailInput.type = "text"
-  gitEmailInput.placeholder = "Git Email Address"
-  if (mobber.gitEmail)
-    gitEmailInput.value = mobber.gitEmail
-
-  gitEmailInput.addEventListener('change', _ => {
-    mobber.gitEmail = gitEmailInput.value
-    ipc.send('updateMobberWithoutPublish', mobber);
-  })
-  gitEmailInput.addEventListener('focusout', _ => {
-    mobber.gitEmail = gitEmailInput.value
-    ipc.send('updateMobberWithoutPublish', mobber);
-  })
-  gitDetailsAccordianForm.appendChild(gitEmailInput)
-
-
-  nameEl.addEventListener("click", function () {
-    if (gitIntegrationEnabledCheckbox.checked) {
-      if (gitIntegrationEnabledCheckbox.checked && gitDetailsAccordianForm.style.display === "block") {
-        gitDetailsAccordianForm.style.display = "none";
-      } else {
-        Array.prototype.forEach.call(document.getElementsByClassName("gitDetailsAccordian"), (e) => e.style.display = "none")
-        gitDetailsAccordianForm.style.display = "block";
-      }
-    }
-  })
-
-  imgEl.addEventListener('click', () => selectImage(mobber))
-  disableBtn.addEventListener('click', () => toggleMobberDisabled(mobber))
-  rmBtn.addEventListener('click', () => ipc.send('removeMobber', mobber))
-
   const mobberContainer = document.createElement('div')
   mobberContainer.classList.add('mobberContainer')
   mobberContainer.appendChild(el)
-  mobberContainer.appendChild(gitDetailsAccordianForm)
+
+  if(gitIntegrationEnabled)
+  {
+    
+    nameEl.classList.add('git-name')
+
+    const gitDetailsAccordianForm = document.createElement('form')
+    gitDetailsAccordianForm.classList.add('git-details')
+    gitDetailsAccordianForm.style.display = "none"
+
+    const gitNameInput = document.createElement("input")
+    gitNameInput.classList.add('git-input')
+    gitNameInput.type = "text"
+    gitNameInput.placeholder = "Git Username"
+    if (mobber.gitUsername)
+      gitNameInput.value = mobber.gitUsername
+
+    gitNameInput.addEventListener('change', _ => {
+      mobber.gitUsername = gitNameInput.value
+      ipc.send('updateMobberWithoutPublish', mobber);
+    })
+    gitNameInput.addEventListener('focusout', _ => {
+      mobber.gitUsername = gitNameInput.value
+      ipc.send('updateMobberWithoutPublish', mobber);
+    })
+
+
+    gitDetailsAccordianForm.appendChild(gitNameInput)
+    gitDetailsAccordianForm.appendChild(document.createElement('br'))
+
+    const gitEmailInput = document.createElement("input")
+    gitEmailInput.classList.add('git-input')
+    gitEmailInput.type = "text"
+    gitEmailInput.placeholder = "Git Email Address"
+    if (mobber.gitEmail)
+      gitEmailInput.value = mobber.gitEmail
+
+    gitEmailInput.addEventListener('change', _ => {
+      mobber.gitEmail = gitEmailInput.value
+      ipc.send('updateMobberWithoutPublish', mobber);
+    })
+    gitEmailInput.addEventListener('focusout', _ => {
+      mobber.gitEmail = gitEmailInput.value
+      ipc.send('updateMobberWithoutPublish', mobber);
+    })
+    gitDetailsAccordianForm.appendChild(gitEmailInput)
+
+
+    nameEl.addEventListener("click", function () {
+      if (gitIntegrationEnabledCheckbox.checked) {
+        if (gitIntegrationEnabledCheckbox.checked && gitDetailsAccordianForm.style.display === "block") {
+          Array.prototype.forEach.call(document.getElementsByClassName("name"), (e) => e.classList.add('git-name'))
+          gitDetailsAccordianForm.style.display = "none";
+        } else {        
+          Array.prototype.forEach.call(document.getElementsByClassName("name"), (e) => e.classList.add('git-name'))
+          Array.prototype.forEach.call(document.getElementsByClassName("git-details"), (e) => e.style.display = "none")
+          gitDetailsAccordianForm.style.display = "block";
+        }
+      }
+    })
+
+    imgEl.addEventListener('click', () => selectImage(mobber))
+    disableBtn.addEventListener('click', () => toggleMobberDisabled(mobber))
+    rmBtn.addEventListener('click', () => ipc.send('removeMobber', mobber))
+
+    mobberContainer.appendChild(gitDetailsAccordianForm)
+  }
+  
   frag.appendChild(mobberContainer)
 }
 
@@ -140,7 +150,7 @@ ipc.on('configUpdated', (event, data) => {
   mobbersEl.innerHTML = ''
   const frag = document.createDocumentFragment()
   data.mobbers.map(mobber => {
-    createMobberEl(frag, mobber)
+    createMobberEl(frag, mobber, data.gitIntegration.enabled)
   })
   mobbersEl.appendChild(frag)
   fullscreenSecondsEl.value = data.secondsUntilFullscreen

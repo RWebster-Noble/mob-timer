@@ -136,3 +136,8 @@ input[type="checkbox" i] {
   padding: 4px;
   padding-right: 8px;
 }
+
+.git-name{
+  text-decoration: underline;
+  cursor: pointer; 
+}
