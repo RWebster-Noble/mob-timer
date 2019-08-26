@@ -52,10 +52,11 @@ function createMobberEl(frag, mobber) {
   el.appendChild(rmBtn)
 
   const gitDetailsAccordianForm = document.createElement('form')
-  gitDetailsAccordianForm.classList.add('gitDetailsAccordian')
+  gitDetailsAccordianForm.classList.add('git-details')
   gitDetailsAccordianForm.style.display = "none"
 
   const gitNameInput = document.createElement("input")
+  gitNameInput.classList.add('git-input')
   gitNameInput.type = "text"
   gitNameInput.placeholder = "Git Username"
   if (mobber.gitUsername)
@@ -75,7 +76,7 @@ function createMobberEl(frag, mobber) {
   gitDetailsAccordianForm.appendChild(document.createElement('br'))
 
   const gitEmailInput = document.createElement("input")
-  gitEmailInput.classList.add('gitInput')
+  gitEmailInput.classList.add('git-input')
   gitEmailInput.type = "text"
   gitEmailInput.placeholder = "Git Email Address"
   if (mobber.gitEmail)
@@ -163,7 +164,9 @@ ipc.on('configUpdated', (event, data) => {
   clearClipboardHistoryOnTurnEndCheckbox.checked = data.clearClipboardHistoryOnTurnEnd
   numberOfItemsClipboardHistoryStores.value = data.numberOfItemsClipboardHistoryStores
   numberOfItemsClipboardHistoryStores.disabled = !clearClipboardHistoryOnTurnEndCheckbox.checked
+
   gitIntegrationEnabledCheckbox.checked = data.gitIntegration.enabled
+  gitIntegrationPortEl.disabled = !gitIntegrationEnabledCheckbox.checked
   gitIntegrationPortEl.value = data.gitIntegration.port
 })
 

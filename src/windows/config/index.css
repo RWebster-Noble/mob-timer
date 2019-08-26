@@ -123,3 +123,16 @@ input[type="checkbox" i] {
   background-color: white;
   overflow: hidden;
 }
+
+.git-port {
+  width: 45px;
+}
+
+.git-input {
+  width: 100%;
+}
+
+.git-details{
+  padding: 4px;
+  padding-right: 8px;
+}
