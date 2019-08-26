@@ -22,6 +22,7 @@ const shuffleMobbersOnStartupCheckbox = document.getElementById('shuffleMobbersO
 const clearClipboardHistoryOnTurnEndCheckbox = document.getElementById('clearClipboardHistoryOnTurnEnd')
 const numberOfItemsClipboardHistoryStores = document.getElementById('numberOfItemsClipboardHistoryStores')
 const gitIntegrationEnabledCheckbox = document.getElementById('gitIntegrationEnabled')
+const gitIntegrationPortEl = document.getElementById('gitIntegrationPort')
 
 function createMobberEl(frag, mobber) {
   const el = document.createElement('div')
@@ -162,7 +163,8 @@ ipc.on('configUpdated', (event, data) => {
   clearClipboardHistoryOnTurnEndCheckbox.checked = data.clearClipboardHistoryOnTurnEnd
   numberOfItemsClipboardHistoryStores.value = data.numberOfItemsClipboardHistoryStores
   numberOfItemsClipboardHistoryStores.disabled = !clearClipboardHistoryOnTurnEndCheckbox.checked
-  gitIntegrationEnabledCheckbox.checked = data.gitIntegrationEnabled
+  gitIntegrationEnabledCheckbox.checked = data.gitIntegration.enabled
+  gitIntegrationPortEl.value = data.gitIntegration.port
 })
 
 minutesEl.addEventListener('change', () => {
@@ -290,5 +292,13 @@ numberOfItemsClipboardHistoryStores.addEventListener('change', () => {
 })
 
 gitIntegrationEnabledCheckbox.addEventListener('change', () => {
-  ipc.send('setGitIntegration', gitIntegrationEnabledCheckbox.checked)
+  ipc.send('setGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
+})
+
+gitIntegrationPortEl.addEventListener('change', () => {
+  ipc.send('setGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
+})
+
+gitIntegrationPortEl.addEventListener('focusout', _ => {
+  ipc.send('setGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
 })

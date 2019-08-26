@@ -5,16 +5,25 @@ class GitIntegration {
         this.mobbers = mobbers
         this.mainTimer = mainTimer
         this.server = null;
+        this.port = 6904;
     }
 
     enabled() {
         return this.server != null
     }
 
-    SetGitIntegration(gitIntegrationEnabled) {
-        if (!this.enabled() && gitIntegrationEnabled)
+    setGitIntegration(gitIntegration) {
+        if (gitIntegration.port !== this.port && this.enabled()) {
+            this.stopCommitMessageServer()
+            this.port = gitIntegration.port
             this.startCommitMessageServer()
-        else if (this.enabled() && !gitIntegrationEnabled) {
+            return;
+        }
+
+        this.port = gitIntegration.port
+        if (!this.enabled() && gitIntegration.enabled)
+            this.startCommitMessageServer()
+        else if (this.enabled() && !gitIntegration.enabled) {
             this.stopCommitMessageServer()
         }
     }
@@ -25,7 +34,7 @@ class GitIntegration {
         // server.on('error', (e) => {
         // });
 
-        this.server.listen(6904, '127.0.0.1');
+        this.server.listen(this.port, '127.0.0.1');
     }
 
     respondToGitHook(socket) {

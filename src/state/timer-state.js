@@ -26,7 +26,7 @@ class TimerState {
     this.lastBreakTime = Date.now()
 
     this.createTimers(options.Timer || Timer)
-    
+
     this.gitIntegration = new GitIntegration(this.mobbers, this.mainTimer)
 
     this.nextMobber = null;
@@ -81,8 +81,8 @@ class TimerState {
     this.startAlerts()
     this.breakDeffered = false;
 
-    if (this.clearClipboardHistoryOnTurnEnd) { 
-      clipboard.clearClipboardHistory(this.numberOfItemsClipboardHistoryStores) 
+    if (this.clearClipboardHistoryOnTurnEnd) {
+      clipboard.clearClipboardHistory(this.numberOfItemsClipboardHistoryStores)
     }
   }
 
@@ -120,11 +120,11 @@ class TimerState {
     }
   }
 
-  startBreak(immediately) {    
-    if(immediately){
+  startBreak(immediately) {
+    if (immediately) {
       this.callback('alert', true)
-      if(this.breakTimer.isRunning())
-        return        
+      if (this.breakTimer.isRunning())
+        return
     }
 
     this.breakTimer.reset(this.breakDurationSeconds)
@@ -351,7 +351,7 @@ class TimerState {
   }
 
   setGitIntegration(value) {
-    this.gitIntegration.SetGitIntegration(value)
+    this.gitIntegration.setGitIntegration(value)
     this.publishConfig()
   }
 
@@ -372,7 +372,10 @@ class TimerState {
       numberOfItemsClipboardHistoryStores: this.numberOfItemsClipboardHistoryStores,
       timerOnTopBecausePaused: !this.mainTimer.isRunning(),
       breakStartsAtTime: this.breakStartsAtTime(),
-      gitIntegrationEnabled: this.gitIntegration.enabled()
+      gitIntegration: {
+        enabled: this.gitIntegration.enabled(),
+        port: this.gitIntegration.port
+      }
     }
   }
 
@@ -407,8 +410,11 @@ class TimerState {
     this.shuffleMobbersOnStartup = !!state.shuffleMobbersOnStartup
     this.clearClipboardHistoryOnTurnEnd = !!state.clearClipboardHistoryOnTurnEnd
     this.numberOfItemsClipboardHistoryStores = Math.floor(state.numberOfItemsClipboardHistoryStores) > 0 ? Math.floor(state.numberOfItemsClipboardHistoryStores) : 1
-    if (typeof state.gitIntegrationEnabled === 'boolean') {
-      this.setGitIntegration(state.gitIntegrationEnabled)
+
+    if (typeof state.gitIntegration === 'object' &&
+      typeof state.gitIntegration.enabled === "boolean" &&
+      typeof state.gitIntegration.port === "number") {
+      this.setGitIntegration(state.gitIntegration)
     }
   }
 }
