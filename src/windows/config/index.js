@@ -55,9 +55,8 @@ function createMobberEl(frag, mobber, gitIntegrationEnabled) {
   mobberContainer.classList.add('mobberContainer')
   mobberContainer.appendChild(el)
 
-  if(gitIntegrationEnabled)
-  {
-    
+  if (gitIntegrationEnabled) {
+
     nameEl.classList.add('git-name')
 
     const gitDetailsAccordianForm = document.createElement('form')
@@ -107,7 +106,7 @@ function createMobberEl(frag, mobber, gitIntegrationEnabled) {
         if (gitIntegrationEnabledCheckbox.checked && gitDetailsAccordianForm.style.display === "block") {
           Array.prototype.forEach.call(document.getElementsByClassName("name"), (e) => e.classList.add('git-name'))
           gitDetailsAccordianForm.style.display = "none";
-        } else {        
+        } else {
           Array.prototype.forEach.call(document.getElementsByClassName("name"), (e) => e.classList.add('git-name'))
           Array.prototype.forEach.call(document.getElementsByClassName("git-details"), (e) => e.style.display = "none")
           gitDetailsAccordianForm.style.display = "block";
@@ -121,7 +120,7 @@ function createMobberEl(frag, mobber, gitIntegrationEnabled) {
 
     mobberContainer.appendChild(gitDetailsAccordianForm)
   }
-  
+
   frag.appendChild(mobberContainer)
 }
 
@@ -156,7 +155,11 @@ ipc.on('configUpdated', (event, data) => {
   fullscreenSecondsEl.value = data.secondsUntilFullscreen
 
   breakCheckbox.checked = data.breakEnabled
+
+  breakFrequencyEl.disabled = !data.breakEnabled
   breakFrequencyEl.value = data.breakFrequencySeconds / 60
+
+  breakDurationEl.disabled = !data.breakEnabled
   breakDurationEl.value = data.breakDurationSeconds / 60
 
   snapToEdgesCheckbox.checked = data.snapThreshold > 0
@@ -305,13 +308,13 @@ numberOfItemsClipboardHistoryStores.addEventListener('change', () => {
 })
 
 gitIntegrationEnabledCheckbox.addEventListener('change', () => {
-  ipc.send('updateGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
+  ipc.send('updateGitIntegration', { enabled: gitIntegrationEnabledCheckbox.checked, port: gitIntegrationPortEl.value * 1 })
 })
 
 gitIntegrationPortEl.addEventListener('change', () => {
-  ipc.send('setGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
+  ipc.send('setGitIntegration', { enabled: gitIntegrationEnabledCheckbox.checked, port: gitIntegrationPortEl.value * 1 })
 })
 
 gitIntegrationPortEl.addEventListener('focusout', _ => {
-  ipc.send('setGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
+  ipc.send('setGitIntegration', { enabled: gitIntegrationEnabledCheckbox.checked, port: gitIntegrationPortEl.value * 1 })
 })
