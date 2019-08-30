@@ -5600,15 +5600,20 @@
         }
     </style>
 </head>
+<script>
+    const { shell } = require('electron')
+</script>
 
 <body id="preview">
     <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Git_Integration_0"></a>Git Integration</h1>
     <p class="has-line-data" data-line-start="2" data-line-end="3">This uses Git Hooks (<a
-            href="https://git-scm.com/docs/githooks">documentation</a>) to edit the commit message and include
+            onclick="shell.openExternal('https\:\/\/git-scm.com/docs/githooks')">documentation</a>) to edit the commit
+        message and include
         co-authors (<a
-            href="https://help.github.com/en/articles/creating-a-commit-with-multiple-authors">documetation</a>)</p>
+            onclick="shell.openExternal('https\:\/\/help.github.com/en/articles/creating-a-commit-with-multiple-authors')">documetation</a>)
+    </p>
     <p class="has-line-data" data-line-start="4" data-line-end="5">To setup copy the following script and paste it in to
-        <code>.git\hooks\commit-msg.sample</code> for all of the git repos you want to use this for.</p>
+        <code>.git\hooks\commit-msg</code> for all of the Git repos you want to use this for.</p>
     <pre><code class="has-line-data" data-line-start="7" data-line-end="20">#!/bin/sh
 
 mobTimerResponce=$(cat &lt;/dev/tcp/localhost/6904)
