@@ -37,7 +37,7 @@ class GitIntegration {
       title: "Mob Timer - Git Integration",
       useContentSize: true,
       width: 539,
-      height: 604,
+      height: 700,
       show: false,
       autoHideMenuBar: true,
     })
