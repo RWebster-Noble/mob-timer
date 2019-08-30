@@ -4,11 +4,11 @@ const windowSnapper = require('./window-snapper')
 const path = require('path')
 
 let timerWindows, configWindow, fullscreenWindows
-let snapThreshold, secondsUntilFullscreen, timerAlwaysOnTop
+let snapThreshold, secondsUntilFullscreen, timerOnTop
 
 exports.createTimerWindow = () => {
   if (timerWindows) {
-    return
+    return primaryTimerWindow
   }
 
   timerWindows = [];
@@ -20,6 +20,7 @@ exports.createTimerWindow = () => {
     if(!isPrimaryDisplay)
       openTimerWindow(display, primaryTimerWindow)
   });
+  return primaryTimerWindow
 }
 
 function openTimerWindow(display, parent){
@@ -35,7 +36,7 @@ function openTimerWindow(display, parent){
     width: timerWidth,
     height: timerHeight,
     resizable: false,
-    alwaysOnTop: timerAlwaysOnTop,
+    alwaysOnTop: timerOnTop,
     frame: false,
     icon: path.join(__dirname, '/../../src/windows/img/icon.png'),
     parent: parent,
@@ -232,11 +233,11 @@ exports.setConfigState = data => {
   breakEnabled = data.breakEnabled
   breakFrequencySeconds = data.breakFrequencySeconds
   breakDurationSeconds = data.breakDurationSeconds
-  timerAlwaysOnTop = data.timerAlwaysOnTop || data.timerOnTopBecausePaused
+  timerOnTop = data.timerAlwaysOnTop || data.timerOnTopBecausePaused
 
   if (timerWindows) {
     timerWindows.forEach(timerWindow => {
-      timerWindow.setAlwaysOnTop(timerAlwaysOnTop)
+      timerWindow.setAlwaysOnTop(timerOnTop)
     });
   }
 }

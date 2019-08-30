@@ -9,6 +9,7 @@ class GitIntegration {
     this.server = null
     this.port = 6904
     this.path = path
+    this.primaryTimerWindow = null;
   }
 
   enabled() {
@@ -66,7 +67,7 @@ class GitIntegration {
           normalizeAccessKeys: true
         }
 
-        const dialogResult = dialog.showMessageBox(options)
+        const dialogResult = dialog.showMessageBox(this.primaryTimerWindow, options)
         if (dialogResult !== 0) {
           // not "Yes"
 

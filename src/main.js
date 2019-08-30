@@ -8,11 +8,12 @@ let statePersister = require('./state/state-persister')
 let timerState = new TimerState()
 
 app.on('ready', () => {
-
+  
   timerState.setCallback(onTimerEvent)
   timerState.loadState(statePersister.read())
-  windows.setConfigState(timerState.getState())
-  windows.createTimerWindow()
+  windows.setConfigState(timerState.getState())  
+  const primaryTimerWindow = windows.createTimerWindow()
+  timerState.gitIntegration.primaryTimerWindow = primaryTimerWindow
   if (timerState.getState().shuffleMobbersOnStartup) {
     timerState.shuffleMobbers()
   }
