@@ -350,6 +350,13 @@ class TimerState {
     this.publishConfig()
   }
 
+  updateGitIntegration(value) {
+    if (value.enabled === true) {
+      this.gitIntegration.displayHelp()
+    }
+    this.setGitIntegration(value)
+  }
+
   setGitIntegration(value) {
     this.gitIntegration.setGitIntegration(value)
     this.publishConfig()

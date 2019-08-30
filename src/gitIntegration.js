@@ -1,4 +1,4 @@
-const { dialog } = require('electron')
+const { dialog, BrowserWindow } = require('electron')
 const path = require('path')
 const net = require('net')
 
@@ -30,6 +30,27 @@ class GitIntegration {
     } else if (this.enabled() && !gitIntegration.enabled) {
       this.stopCommitMessageServer()
     }
+  }
+
+  displayHelp() {
+    let helpWindow = new BrowserWindow({
+      title: "Mob Timer - Git Integration",
+      useContentSize: true,
+      width: 539,
+      height: 604,
+      show: false,
+      autoHideMenuBar: true,
+    })
+    helpWindow.on('closed', () => {
+      helpWindow = null
+    })
+
+    // Or load a local HTML file
+    helpWindow.loadURL(`file://${__dirname}\\windows\\gitIntegrationHelp.html`)
+
+    helpWindow.once('ready-to-show', () => {
+      helpWindow.show()
+    })
   }
 
   startCommitMessageServer() {

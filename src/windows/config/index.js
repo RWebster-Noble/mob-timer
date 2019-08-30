@@ -305,7 +305,7 @@ numberOfItemsClipboardHistoryStores.addEventListener('change', () => {
 })
 
 gitIntegrationEnabledCheckbox.addEventListener('change', () => {
-  ipc.send('setGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
+  ipc.send('updateGitIntegration', {enabled:gitIntegrationEnabledCheckbox.checked, port:gitIntegrationPortEl.value * 1})
 })
 
 gitIntegrationPortEl.addEventListener('change', () => {

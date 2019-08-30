@@ -56,7 +56,7 @@ ipc.on('setTimerAlwaysOnTop', (event, value) => timerState.setTimerAlwaysOnTop(v
 ipc.on('setShuffleMobbersOnStartup', (event, value) => timerState.setShuffleMobbersOnStartup(value))
 ipc.on('setClearClipboardHistoryOnTurnEnd', (event, value) => timerState.setClearClipboardHistoryOnTurnEnd(value))
 ipc.on('setNumberOfItemsClipboardHistoryStores', (event, value) => timerState.setNumberOfItemsClipboardHistoryStores(value))
-ipc.on('setGitIntegration', (event, value) => timerState.setGitIntegration(value))
+ipc.on('updateGitIntegration', (event, value) => timerState.updateGitIntegration(value))
 
 ipc.on('updateMobberWithoutPublish', (event, mobber) => {
   timerState.mobbers.updateMobber(mobber)
