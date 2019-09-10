@@ -25,7 +25,10 @@ function write(state, onTimerEventCallback) {
   const stateToPersist = Object.assign({}, state);
   delete stateToPersist.timerOnTopBecausePaused
 
-  const oldState = fs.readFileSync(stateFile, 'utf-8')
+  var oldState
+  if(fs.existsSync(stateFile))
+    oldState = fs.readFileSync(stateFile, 'utf-8')
+
   const newstate = JSON.stringify(stateToPersist)
 
   // Has the state actually changed?
