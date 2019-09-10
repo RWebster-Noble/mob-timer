@@ -144,6 +144,18 @@ function toggleMobberDisabled(mobber) {
   ipc.send('updateMobber', mobber)
 }
 
+const saved = document.querySelector(".saved");
+let timeout = null;
+ipc.on('savedConfig', (event, data) => {
+  saved.classList.add("savedVisable");
+  if (timeout)
+    window.clearTimeout(timeout);
+
+  timeout = setTimeout(() => {
+    saved.classList.remove("savedVisable");
+  }, 750);
+});
+
 ipc.on('configUpdated', (event, data) => {
   minutesEl.value = data.secondsPerTurn / 60
   mobbersEl.innerHTML = ''

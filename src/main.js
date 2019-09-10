@@ -22,7 +22,7 @@ app.on('ready', () => {
 function onTimerEvent(event, data) {
   windows.dispatchEvent(event, data)
   if (event === 'configUpdated') {
-    statePersister.write(timerState.getState())
+    statePersister.write(timerState.getState(), onTimerEvent)
   }
 }
 
@@ -60,7 +60,7 @@ ipc.on('updateGitIntegration', (event, value) => timerState.updateGitIntegration
 
 ipc.on('updateMobberWithoutPublish', (event, mobber) => {
   timerState.mobbers.updateMobber(mobber)
-  statePersister.write(timerState.getState())
+  statePersister.write(timerState.getState(), onTimerEvent)
 })
 
 app.on('window-all-closed', function () {

@@ -141,3 +141,23 @@ input[type="checkbox" i] {
   text-decoration: underline;
   cursor: pointer; 
 }
+
+.saved {
+  background-color: var(--theme-secondary-color);
+  color: #fff;
+  position: fixed;
+  top: -72px;
+  width: 82px;
+  text-align: center;
+  line-height: 24px;
+  transition: transform 0.5s; 
+  z-index: 999;
+  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 40px;
+  left: 50%;
+  margin-left: -7.5%;
+ }
+
+ .savedVisable {
+  transform: translate(0, 72px);
+}

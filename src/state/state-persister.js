@@ -16,11 +16,23 @@ function read() {
   return {}
 }
 
-function write(state) {
+function write(state, onTimerEventCallback) {
   if (!fs.existsSync(mobTimerDir)) {
     fs.mkdirSync(mobTimerDir)
   }
-  fs.writeFileSync(stateFile, JSON.stringify(state))
+
+  // Don't persist timerOnTopBecausePaused
+  const stateToPersist = Object.assign({}, state);
+  delete stateToPersist.timerOnTopBecausePaused
+
+  const oldState = fs.readFileSync(stateFile, 'utf-8')
+  const newstate = JSON.stringify(stateToPersist)
+
+  // Has the state actually changed?
+  if (oldState !== newstate) {
+    fs.writeFileSync(stateFile, newstate)
+    onTimerEventCallback("savedConfig", null)
+  }
 }
 
 module.exports = {
