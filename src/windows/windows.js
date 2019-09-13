@@ -1,31 +1,30 @@
-const electron = require('electron')
-const { app } = electron
-const windowSnapper = require('./window-snapper')
-const path = require('path')
+const electron = require("electron");
+const { app } = electron;
+const windowSnapper = require("./window-snapper");
+const path = require("path");
 
-let timerWindows, configWindow, fullscreenWindows
-let snapThreshold, secondsUntilFullscreen, timerOnTop
+let timerWindows, configWindow, fullscreenWindows;
+let snapThreshold, secondsUntilFullscreen, timerOnTop;
 
 exports.createTimerWindow = () => {
   if (timerWindows) {
-    return primaryTimerWindow
+    return primaryTimerWindow;
   }
 
   timerWindows = [];
-  let primaryDisplay = electron.screen.getPrimaryDisplay()
-  let primaryTimerWindow = openTimerWindow(primaryDisplay, null)
+  let primaryDisplay = electron.screen.getPrimaryDisplay();
+  let primaryTimerWindow = openTimerWindow(primaryDisplay, null);
 
   electron.screen.getAllDisplays().forEach(display => {
-    var isPrimaryDisplay = display.id == primaryDisplay.id
-    if(!isPrimaryDisplay)
-      openTimerWindow(display, primaryTimerWindow)
+    var isPrimaryDisplay = display.id == primaryDisplay.id;
+    if (!isPrimaryDisplay) openTimerWindow(display, primaryTimerWindow);
   });
-  return primaryTimerWindow
-}
+  return primaryTimerWindow;
+};
 
-function openTimerWindow(display, parent){
-  let { width, height } = display.workAreaSize
-  let { x, y } = display.bounds
+function openTimerWindow(display, parent) {
+  let { width, height } = display.workAreaSize;
+  let { x, y } = display.bounds;
 
   const timerWidth = 220;
   const timerHeight = 90;
@@ -38,77 +37,77 @@ function openTimerWindow(display, parent){
     resizable: false,
     alwaysOnTop: timerOnTop,
     frame: false,
-    icon: path.join(__dirname, '/../../src/windows/img/icon.png'),
+    icon: path.join(__dirname, "/../../src/windows/img/icon.png"),
     parent: parent,
     show: false
-  })
+  });
 
-  timerWindow.once('ready-to-show', () => {
-    timerWindow.show()
-  })
+  timerWindow.once("ready-to-show", () => {
+    timerWindow.show();
+  });
 
-  timerWindow.loadURL(`file://${__dirname}/timer/index.html`)
+  timerWindow.loadURL(`file://${__dirname}/timer/index.html`);
 
-  timerWindow.on('closed', x => {
+  timerWindow.on("closed", x => {
     if (timerWindows) {
       closeThisWindow(x); // To prevent an infinate window closing loop
-      exports.closeTimerWindows()
+      exports.closeTimerWindows();
     }
-  })
+  });
 
-  timerWindow.on('move', () => {
+  timerWindow.on("move", () => {
     if (snapThreshold <= 0) {
-      return
+      return;
     }
 
     let getCenter = bounds => {
       return {
-        x: bounds.x + (bounds.width / 2),
-        y: bounds.y + (bounds.height / 2)
-      }
-    }
+        x: bounds.x + bounds.width / 2,
+        y: bounds.y + bounds.height / 2
+      };
+    };
 
-    let windowBounds = timerWindow.getBounds()
-    let screenBounds = electron.screen.getDisplayNearestPoint(getCenter(windowBounds)).workArea
+    let windowBounds = timerWindow.getBounds();
+    let screenBounds = electron.screen.getDisplayNearestPoint(
+      getCenter(windowBounds)
+    ).workArea;
 
-    if(timerWindow.snappedDist){
+    if (timerWindow.snappedDist) {
       // set windowBounds to origional position from before snapping
       // as to do snapping calculation on window position as it would be if it hadn't already been snapped
-      windowBounds.x -= timerWindow.snappedDist.x
-      windowBounds.y -= timerWindow.snappedDist.y
+      windowBounds.x -= timerWindow.snappedDist.x;
+      windowBounds.y -= timerWindow.snappedDist.y;
     }
 
-    let snapTo = windowSnapper(windowBounds, screenBounds, snapThreshold)
+    let snapTo = windowSnapper(windowBounds, screenBounds, snapThreshold);
     if (snapTo.x !== windowBounds.x || snapTo.y !== windowBounds.y) {
       // perform snapping
-      timerWindow.snappedDist = {}
-      timerWindow.snappedDist.x = windowBounds.x - snapTo.x
-      timerWindow.snappedDist.y = windowBounds.y - snapTo.y
-      timerWindow.setPosition(snapTo.x, snapTo.y)
-    }
-    else if(timerWindow.snappedDist) // just stopped snapping
-    {      
+      timerWindow.snappedDist = {};
+      timerWindow.snappedDist.x = windowBounds.x - snapTo.x;
+      timerWindow.snappedDist.y = windowBounds.y - snapTo.y;
+      timerWindow.setPosition(snapTo.x, snapTo.y);
+    } else if (timerWindow.snappedDist) {
+      // just stopped snapping
       // return to original position before snapping
 
-      // timerWindow.setPosition triggers an timerWindow.on('move') call, making this code recursive. 
+      // timerWindow.setPosition triggers an timerWindow.on('move') call, making this code recursive.
       // this neeeds to be here to break the recursion and stop unexpected behaivour.
-      timerWindow.snappedDist = null
+      timerWindow.snappedDist = null;
 
       // windowBounds will have been set to origional position from before snapping
-      timerWindow.setPosition(windowBounds.x, windowBounds.y)
+      timerWindow.setPosition(windowBounds.x, windowBounds.y);
     }
-  })
+  });
 
-  timerWindows.push(timerWindow)
+  timerWindows.push(timerWindow);
 
-  return timerWindow
+  return timerWindow;
 }
 
 function closeThisWindow(window) {
   let i = timerWindows.indexOf(window.sender);
   timerWindows.splice(i, 1);
-  if (timerWindows.length == 0)
-    timerWindows = null;
+  if (timerWindows.length == 0) timerWindows = null;
 }
 
 exports.closeTimerWindows = () => {
@@ -116,22 +115,22 @@ exports.closeTimerWindows = () => {
     windowsCopy = timerWindows.slice();
     timerWindows = null;
     windowsCopy.forEach(window => {
-      window.close()
-    })
+      window.close();
+    });
   }
-}
+};
 
 exports.showConfigWindow = () => {
   if (configWindow) {
-    configWindow.show()
-    return
+    configWindow.show();
+    return;
   }
-  exports.createConfigWindow()
-}
+  exports.createConfigWindow();
+};
 
 exports.createConfigWindow = () => {
   if (configWindow) {
-    return
+    return;
   }
 
   configWindow = new electron.BrowserWindow({
@@ -139,26 +138,25 @@ exports.createConfigWindow = () => {
     height: 500,
     autoHideMenuBar: true,
     show: false
-  })
+  });
 
-  configWindow.once('ready-to-show', () => {
-    configWindow.show()
-  })
+  configWindow.once("ready-to-show", () => {
+    configWindow.show();
+  });
 
-  configWindow.loadURL(`file://${__dirname}/config/index.html`)
-  configWindow.on('closed', () => (configWindow = null))
-}
+  configWindow.loadURL(`file://${__dirname}/config/index.html`);
+  configWindow.on("closed", () => (configWindow = null));
+};
 
 exports.createFullscreenWindow = () => {
   if (fullscreenWindows) {
-    return
+    return;
   }
 
   fullscreenWindows = [];
-  let displays = electron.screen.getAllDisplays()
+  let displays = electron.screen.getAllDisplays();
   displays.forEach(display => {
-
-    let { x, y } = display.bounds
+    let { x, y } = display.bounds;
 
     let window = createAlwaysOnTopFullscreenInterruptingWindow({
       x,
@@ -168,97 +166,96 @@ exports.createFullscreenWindow = () => {
       alwaysOnTop: true,
       frame: false,
       show: false
-    })
-  
-    window.once('ready-to-show', () => {
-      window.show()
-    })
+    });
 
-    window.loadURL(`file://${__dirname}/fullscreen/index.html`)
+    window.once("ready-to-show", () => {
+      window.show();
+    });
 
-    window.on('closed', x => {
+    window.loadURL(`file://${__dirname}/fullscreen/index.html`);
+
+    window.on("closed", x => {
       if (fullscreenWindows) {
         let i = fullscreenWindows.indexOf(x.sender);
         fullscreenWindows.splice(i, 1);
-        if (fullscreenWindows.length == 0)
-          fullscreenWindows = null;
+        if (fullscreenWindows.length == 0) fullscreenWindows = null;
 
         exports.closeFullscreenWindows();
       }
-    })
+    });
 
-    fullscreenWindows.push(window)
-  })
-}
+    fullscreenWindows.push(window);
+  });
+};
 
 exports.closeFullscreenWindows = () => {
   if (fullscreenWindows) {
     windowsCopy = fullscreenWindows.slice();
     fullscreenWindows = null;
     windowsCopy.forEach(window => {
-      window.close()
-    })
+      window.close();
+    });
   }
-}
+};
 
 exports.dispatchEvent = (event, data) => {
-  if (event === 'configUpdated') {
-    exports.setConfigState(data)
+  if (event === "configUpdated") {
+    exports.setConfigState(data);
   }
-  if (event === 'alert' && (data === secondsUntilFullscreen || data === true)) {
-      exports.createFullscreenWindow()    
+  if (event === "alert" && (data === secondsUntilFullscreen || data === true)) {
+    exports.createFullscreenWindow();
   }
-  if (event === 'stopAlerts') {
-    exports.closeFullscreenWindows()
+  if (event === "stopAlerts") {
+    exports.closeFullscreenWindows();
   }
 
   if (timerWindows) {
     timerWindows.forEach(timerWindow => {
-      timerWindow.webContents.send(event, data)
+      timerWindow.webContents.send(event, data);
     });
   }
   if (configWindow) {
-    configWindow.webContents.send(event, data)
+    configWindow.webContents.send(event, data);
   }
   if (fullscreenWindows) {
     fullscreenWindows.forEach(window => {
-      window.webContents.send(event, data)
-    })
+      window.webContents.send(event, data);
+    });
   }
-}
+};
 
 exports.setConfigState = data => {
-  snapThreshold = data.snapThreshold
-  secondsUntilFullscreen = data.secondsUntilFullscreen
-  breakEnabled = data.breakEnabled
-  breakFrequencySeconds = data.breakFrequencySeconds
-  breakDurationSeconds = data.breakDurationSeconds
-  timerOnTop = data.timerAlwaysOnTop || data.timerOnTopBecausePaused
+  snapThreshold = data.snapThreshold;
+  secondsUntilFullscreen = data.secondsUntilFullscreen;
+  breakEnabled = data.breakEnabled;
+  breakFrequencySeconds = data.breakFrequencySeconds;
+  breakDurationSeconds = data.breakDurationSeconds;
+  timerOnTop = data.timerAlwaysOnTop || data.timerOnTopBecausePaused;
 
   if (timerWindows) {
     timerWindows.forEach(timerWindow => {
-      timerWindow.setAlwaysOnTop(timerOnTop)
+      timerWindow.setAlwaysOnTop(timerOnTop);
     });
   }
-}
+};
 
 function createAlwaysOnTopFullscreenInterruptingWindow(options) {
   return whileAppDockHidden(() => {
-    const window = new electron.BrowserWindow(options)
-    window.setAlwaysOnTop(true, 'screen-saver')
-    return window
-  })
+    const window = new electron.BrowserWindow(options);
+    window.setAlwaysOnTop(true, "screen-saver");
+    return window;
+  });
 }
 
 function whileAppDockHidden(work) {
   if (app.dock) {
     // Mac OS: The window will be able to float above fullscreen windows too
-    app.dock.hide()
+    app.dock.hide();
   }
-  const result = work()
+  const result = work();
   if (app.dock) {
     // Mac OS: Show in dock again, window has been created
-    app.dock.show()
+    app.dock.show();
   }
-  return result
+  return result;
 }
