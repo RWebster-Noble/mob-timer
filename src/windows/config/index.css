@@ -1,163 +1,176 @@
 @import url('../theme.css');
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  color: var(--main-text-color);
-  background-color: var(--main-background-color);
+    margin: 0;
+    padding: 0;
+    font-family: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--main-text-color);
+    background-color: var(--main-background-color);
 }
 
 input {
-  height: 22px;
+    height: 22px;
 }
 
 .container {
-  margin: 20px;
+    margin: 20px;
+    min-width: 24rem;
 }
 
 .minutes {
-  width: 40px;
+    width: 40px;
 }
 
 .mobber {
-  display: flex;
-  padding: 4px;
-  align-items: center;
+    display: flex;
+    padding: 4px;
+    align-items: center;
 }
 
-.mobber .image {
-  margin-right: 5px;
-  height: 24px;
-  width: 24px;
-  border-radius: 50%;
-  border: 2px solid var(--mobber-border-color);
-  cursor: pointer;
-}
+    .mobber .image {
+        margin-right: 5px;
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        border: 2px solid var(--mobber-border-color);
+        cursor: pointer;
+    }
 
-.mobber .image:hover {
-  border: 2px solid var(--mobber-border-highlight-color);
-}
+        .mobber .image:hover {
+            border: 2px solid var(--mobber-border-highlight-color);
+        }
 
 .mobberContainer:nth-child(odd) {
-  background-color: var(--table-stripe-color);
+    background-color: var(--table-stripe-color);
 }
 
 .mobber .btn:first-of-type {
-  display: block;
-  margin-left: auto;
+    display: block;
+    margin-left: auto;
 }
 
 .mobber.disabled .image {
-  opacity: .3;
+    opacity: .3;
 }
 
 .mobber.disabled .name {
-  font-style: italic;
-  color: var(--disabled-text-color);
-  text-decoration: line-through;
+    font-style: italic;
+    color: var(--disabled-text-color);
+    text-decoration: line-through;
 }
 
 .oneLineInputAndButton {
-  margin: 4px 0;
+    margin: 4px 0;
 }
 
 .addLabel {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .mobberListActions {
-  margin: 4px 0 4px -5px;
-  display: flex;
+    margin: 4px 0 4px -5px;
+    display: flex;
 }
 
 .btn {
-  background-color: var(--button-background-color);
-  border: 0;
-  border-radius: 3px;
-  padding: 7px 10px;
-  color: var(--button-text-color);
-  margin-left: 5px;
-  cursor: pointer;
+    background-color: var(--button-background-color);
+    border: 0;
+    border-radius: 3px;
+    padding: 7px 10px;
+    color: var(--button-text-color);
+    margin-left: 5px;
+    cursor: pointer;
 }
 
 h1 {
-  font-size: 18px;
-  border-bottom: 1px solid var(--main-text-color);
-  margin-top: 20px;
+    font-size: 18px;
+    border-bottom: 1px solid var(--main-text-color);
+    margin-top: 20px;
+    font-variant: all-small-caps;
+    font-weight: 400;
 }
 
 input[type="checkbox" i] {
-  position: relative;
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
-.settings > div {
-  margin-bottom: 10px;
+.additional-settings {
+    list-style-type: none;
+    padding: 0;
+}
+
+.additional-settings__item {
+    margin-top: 1em;
 }
 
 .fullscreen-seconds {
-  width: 40px;
+    width: 40px;
 }
 
 .replay-audio-seconds {
-  width: 40px;
+    width: 40px;
+    margin-left: -1em;
 }
 
 #replayAudioContainer.disabled {
-  color: var(--disabled-text-color);
+    color: var(--disabled-text-color);
 }
 
+    #replayAudioContainer.disabled .replay-audio-seconds-suffix {
+        opacity: 0.5;
+    }
+
 .custom-sound {
-  width: 145px;
+    width: 145px;
+    margin-left: -1em;
 }
 
 .clipboard-history-items {
-  width: 40px;
+    width: 40px;
 }
 
 .gitDetails {
-  padding: 0 18px;
-  display: none;
-  background-color: white;
-  overflow: hidden;
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
 }
 
 .git-port {
-  width: 45px;
+    width: 45px;
 }
 
 .git-input {
-  width: 100%;
+    width: 100%;
 }
 
-.git-details{
-  padding: 4px;
-  padding-right: 8px;
+.git-details {
+    padding: 4px;
+    padding-right: 8px;
 }
 
-.git-name{
-  text-decoration: underline;
-  cursor: pointer; 
+.git-name {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .saved {
-  background-color: var(--theme-secondary-color);
-  color: #fff;
-  position: fixed;
-  top: -72px;
-  width: 82px;
-  text-align: center;
-  line-height: 24px;
-  transition: transform 0.5s; 
-  z-index: 999;
-  border-bottom-right-radius: 40px;
-  border-bottom-left-radius: 40px;
-  left: 50%;
-  margin-left: -7.5%;
- }
+    background-color: var(--theme-secondary-color);
+    color: #fff;
+    position: fixed;
+    top: -72px;
+    width: 82px;
+    text-align: center;
+    line-height: 24px;
+    transition: transform 0.5s;
+    z-index: 999;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    left: 50%;
+    margin-left: -7.5%;
+}
 
- .savedVisable {
-  transform: translate(0, 72px);
+.savedVisable {
+    transform: translate(0, 72px);
 }

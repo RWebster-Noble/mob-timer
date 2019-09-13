@@ -1,46 +1,77 @@
 {
   "name": "mob-timer",
-  "version": "1.0.0",
-  "description": "",
+  "engines": {
+    "node": "12.4.0"
+  },
+  "description": "A cross-platform mob-timer built on Electron for doing Mob Programming.",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "build-win": "electron-packager . --platform=win32 --arch=x64 --out=dist --icon=icon --overwrite",
+    "package-win": "cross-zip ./dist/mob-timer-win32-x64 ./dist/mob-timer-win32-x64.zip",
+    "travis-script-win": "npm run test && npm run build-win",
     "build-mac": "electron-packager . --platform=darwin --arch=x64 --out=dist --icon=icon --overwrite",
+    "package-mac": "tar -zcf ./dist/mob-timer-darwin-x64.tar.gz dist/mob-timer-darwin-x64",
+    "travis-script-mac": "npm run test && npm run build-mac",
     "build-linux": "electron-packager . --platform=linux --arch=x64 --out=dist --icon=icon --overwrite",
-    "lint": "eslint .",
+    "package-linux": "tar -zcf ./dist/mob-timer-linux-x64.tar.gz dist/mob-timer-linux-x64",
+    "travis-script-linux": "npm run test && npm run coverage && npm run build-linux",
+    "lint": "eslint --format codeframe .",
     "pretest": "npm run lint",
-    "test": "mocha --use_strict --recursive",
-    "tdd": "mocha --use_strict --recursive -w",
-    "watch": "mocha --use_strict --recursive -w",
-    "prettier" : "prettier es6 --write \"src/**/*.js\""
+    "test": "jest .",
+    "tdd": "jest --watch",
+    "watch": "jest --watch",
+    "coverage": "jest --coverage --coverageReporters=text-lcov | coveralls"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist"
+    ],
+    "coverageReporters": [
+      "text-summary"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js",
+      "!src/**/test-*.js"
+    ],
+    "collectCoverage": true,
+    "resetMocks": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pluralsight/mob-timer.git"
+    "url": "git+https://github.com/mob-timer/mob-timer.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
+  "private": true,
   "bugs": {
-    "url": "https://github.com/pluralsight/mob-timer/issues"
+    "url": "https://github.com/mob-timer/mob-timer/issues"
   },
-  "homepage": "https://github.com/pluralsight/mob-timer#readme",
+  "homepage": "https://mob-timer.github.io",
   "devDependencies": {
-    "electron": "^1.8.3",
-    "electron-packager": "^12.1.0",
-    "eslint": "^5.8.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-mocha": "^5.2.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "mocha": "^5.0.4",
-    "prettier": "1.18.2",
-    "sinon": "^7.1.1"
+    "@babel/core": "^7.5.5",
+    "coveralls": "^3.0.6",
+    "cross-zip-cli": "^1.0.0",
+    "electron": "^6.0.0",
+    "electron-packager": "^14.0.0",
+    "electron-releases": "^3.209.0",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.15.1",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "sinon": "^7.4.1"
   },
   "dependencies": {
     "clipboardy": "^1.2.3",
+    "debounce": "^1.2.0",
+    "pretty-checkbox": "^3.0.3",
+    "typeface-work-sans": "0.0.72",
     "uuid": "^3.2.1"
   }
 }

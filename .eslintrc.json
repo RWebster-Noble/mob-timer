@@ -3,35 +3,23 @@
     "eslint:recommended",
     "plugin:node/recommended",
     "plugin:promise/recommended",
-    "standard"
+    "plugin:jest/recommended",
+    "plugin:import/recommended",
+    "plugin:prettier/recommended"
   ],
   "env": {
-    "mocha": true
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "globals": {
+    "document": "readonly",
+    "getComputedStyle": "readonly"
   },
   "plugins": [
-    "mocha",
-    "node"
-  ],
-  "globals": {
-    "expect": true
-  },
-  "overrides": [
-    {
-      "files": "*.spec.js",
-      "rules": {
-        "no-unused-expressions": "off"
-      }
-    }
+    "promise"
   ],
   "rules": {
-    "array-bracket-spacing": "error",
-    "arrow-parens": [
-      2,
-      "as-needed"
-    ],
-    "eol-last": "error",
-    "generator-star-spacing": "off",
-    "mocha/no-exclusive-tests": "error",
     "node/no-unpublished-require": [
       "error",
       {
@@ -43,27 +31,22 @@
         ]
       }
     ],
-    "no-unused-vars": [
-      2,
-      {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": true
-      }
-    ],
-    "space-before-function-paren": [
+    "complexity": "error",
+    "max-lines": [
       "error",
-      "never"
+      700
     ],
-    "standard/object-curly-even-spacing": [
-      2,
-      "always"
-    ],
-    "yield-star-spacing": [
+    "max-depth": "error",
+    "max-params": "error",
+    "no-restricted-modules": [
       "error",
       {
-        "before": false,
-        "after": true
+        "paths": [
+          {
+            "name": "assert",
+            "message": "\n\tPlease use the global expect provided by jest instead.\n\tDocumentation at https://jestjs.io/docs/en/expect.html\n"
+          }
+        ]
       }
     ]
   }

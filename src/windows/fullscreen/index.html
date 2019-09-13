@@ -2,43 +2,46 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <title>Mob Timer</title>
-  <link rel="stylesheet" href="./index.css">
+    <meta charset="utf-8">
+    <title>Mob Timer</title>
+    <link rel="stylesheet" href="../../../node_modules/typeface-work-sans/index.css">
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
 
-  <div id="container" class="container">
+<div id="container" class="container">
 
     <div class="current">
-      <div class="timerContainer">
+        <div class="timerContainer">
+            <img id="currentPic" class="pic" />
+            <canvas id="timerCanvas" class="timerCanvas" width="160" height="160"></canvas>
+        </div>
         <img id="currentPic" class="pic" />
-        <canvas id="timerCanvas" class="timerCanvas" width="160" height="160"></canvas>
-      </div>
-      <br/>
-      <span id="current">{name}</span><span id="sitMessage">, please sit at the keyboard</span>
+        <br />
+        <span id="current">{name}</span>, please sit at the keyboard
     </div>
     <div class="controls">
-      <button id="startTurn" class="btn">Start</button>
-      <button id="skip" class="btn skip">Skip</button>
-      <button id="configure" class="btn">Configure</button>
+        <button id="startTurn" class="btn">Start</button>
+        <button id="skip" class="btn skip">Skip</button>
+        <button id="configure" class="btn">Configure</button>
     </div>
     <div class="next">
-      Up Next: <img id="nextPic" class="pic"><span id="next">{name}</span>
-    </div >
-      <div id="breakTimeContainer" class="break next">
+        Up Next: <img id="nextPic" class="pic"><span id="next">{name}</span>
+    </div>
+    <div id="breakTimeContainer" class="break next">
         Next break at: <span id="breakTime">{breakTime}</span>
     </div>
     <div id="takeABreakcontainer">
-      <button id="takeABreak" class="takeABreak">Take a break now</button>
+        <button id="takeABreak" class="takeABreak">Take a break now</button>
     </div>
-  </div>
+
+</div>
 
 
-  <script type="text/javascript">
+<script type="text/javascript">
     require('./index.js')
-  </script>
+</script>
 </body>
 
 </html>

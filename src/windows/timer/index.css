@@ -1,199 +1,210 @@
 @import url('../theme.css');
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  user-select: none;
-  color: var(--main-text-color);
-  background-color: var(--main-background-color);
-}
-.drag-handle {
-  width: 20px;
-  height: 20px;
-  position: fixed;
-  top: 0px;
-  left: 0px; 
-  background-size: cover;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGQ9Ik0yNC42LDYzLjJjMS40LDEuNSwzLjgsMS42LDUuMywwLjJzMS42LTMuOCwwLjItNS4zYy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMmwtNC4yLTQuMmgyMXYyMWwtNC4yLTQuMiAgYy0xLjQtMS41LTMuOC0xLjYtNS4zLTAuMmMtMS41LDEuNC0xLjYsMy44LTAuMiw1LjNjMC4xLDAuMSwwLjEsMC4xLDAuMiwwLjJsMTAuNiwxMC42YzEuNSwxLjUsMy44LDEuNSw1LjMsMGwxMC41LTEwLjYgIGMxLjUtMS40LDEuNi0zLjgsMC4yLTUuM2MtMS40LTEuNS0zLjgtMS42LTUuMy0wLjJjLTAuMSwwLjEtMC4xLDAuMS0wLjIsMC4ybC00LjIsNC4ydi0yMWgyMUw3MSw1Ny45Yy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuMyAgYzEuNCwxLjUsMy44LDEuNiw1LjMsMC4yYzAuMS0wLjEsMC4xLTAuMSwwLjItMC4ybDEwLjYtMTAuNmMxLjUtMS41LDEuNS0zLjgsMC01LjNMNzYuMiwzNi43Yy0xLjQtMS41LTMuOC0xLjYtNS4zLTAuMiAgYy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuM2MwLjEsMC4xLDAuMSwwLjEsMC4yLDAuMmw0LjIsNC4yaC0yMXYtMjFsNC4yLDQuMmMxLjQsMS41LDMuOCwxLjYsNS4zLDAuMnMxLjYtMy44LDAuMi01LjMgIGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjJMNTMuMSwxMy42Yy0xLjUtMS41LTMuOC0xLjUtNS4zLDBMMzcuMiwyNC4yYy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuM2MxLjQsMS41LDMuOCwxLjYsNS4zLDAuMiAgYzAuMS0wLjEsMC4xLTAuMSwwLjItMC4ybDQuMi00LjJ2MjFoLTIxbDQuMi00LjJjMS41LTEuNCwxLjYtMy44LDAuMi01LjNjLTEuNC0xLjUtMy44LTEuNi01LjMtMC4yYy0wLjEsMC4xLTAuMSwwLjEtMC4yLDAuMiAgTDE0LDQ3LjNjLTEuNSwxLjUtMS41LDMuOCwwLDUuM0wyNC42LDYzLjJ6Ij48L3BhdGg+PC9zdmc+");
-  -webkit-app-region: drag;
-  cursor: pointer;
-  opacity: .5;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    font-family: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+    user-select: none;
+    color: var(--main-text-color);
+    background-color: var(--main-background-color);
 }
 
-.drag-handle:hover {
-  opacity: .7;
+.drag-handle {
+    width: 20px;
+    height: 20px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-size: cover;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGQ9Ik0yNC42LDYzLjJjMS40LDEuNSwzLjgsMS42LDUuMywwLjJzMS42LTMuOCwwLjItNS4zYy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMmwtNC4yLTQuMmgyMXYyMWwtNC4yLTQuMiAgYy0xLjQtMS41LTMuOC0xLjYtNS4zLTAuMmMtMS41LDEuNC0xLjYsMy44LTAuMiw1LjNjMC4xLDAuMSwwLjEsMC4xLDAuMiwwLjJsMTAuNiwxMC42YzEuNSwxLjUsMy44LDEuNSw1LjMsMGwxMC41LTEwLjYgIGMxLjUtMS40LDEuNi0zLjgsMC4yLTUuM2MtMS40LTEuNS0zLjgtMS42LTUuMy0wLjJjLTAuMSwwLjEtMC4xLDAuMS0wLjIsMC4ybC00LjIsNC4ydi0yMWgyMUw3MSw1Ny45Yy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuMyAgYzEuNCwxLjUsMy44LDEuNiw1LjMsMC4yYzAuMS0wLjEsMC4xLTAuMSwwLjItMC4ybDEwLjYtMTAuNmMxLjUtMS41LDEuNS0zLjgsMC01LjNMNzYuMiwzNi43Yy0xLjQtMS41LTMuOC0xLjYtNS4zLTAuMiAgYy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuM2MwLjEsMC4xLDAuMSwwLjEsMC4yLDAuMmw0LjIsNC4yaC0yMXYtMjFsNC4yLDQuMmMxLjQsMS41LDMuOCwxLjYsNS4zLDAuMnMxLjYtMy44LDAuMi01LjMgIGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjJMNTMuMSwxMy42Yy0xLjUtMS41LTMuOC0xLjUtNS4zLDBMMzcuMiwyNC4yYy0xLjUsMS40LTEuNiwzLjgtMC4yLDUuM2MxLjQsMS41LDMuOCwxLjYsNS4zLDAuMiAgYzAuMS0wLjEsMC4xLTAuMSwwLjItMC4ybDQuMi00LjJ2MjFoLTIxbDQuMi00LjJjMS41LTEuNCwxLjYtMy44LDAuMi01LjNjLTEuNC0xLjUtMy44LTEuNi01LjMtMC4yYy0wLjEsMC4xLTAuMSwwLjEtMC4yLDAuMiAgTDE0LDQ3LjNjLTEuNSwxLjUtMS41LDMuOCwwLDUuM0wyNC42LDYzLjJ6Ij48L3BhdGg+PC9zdmc+");
+    -webkit-app-region: drag;
+    cursor: pointer;
+    opacity: .5;
 }
+
+    .drag-handle:hover {
+        opacity: .7;
+    }
+
 .container {
-  position: relative;
-  /* height: 100vh; */
+    position: relative;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: min-content auto min-content;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "current current-name configure" "current next         next";
+    padding: 6px;
+    box-sizing: border-box;
+    grid-gap: 0 6px;
 }
 
 .button {
-  cursor: pointer;
-  -webkit-app-region: no-drag;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
 }
 
 .pic {
-  border-radius: 50%;
+    border-radius: 50%;
 }
 
 .timerContainer {
-  position: absolute;
-  top: 5px;
-  left: 5px;
+    position: relative;
+    grid-area: current;
 }
 
 .currentPic {
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 76px;
-  height: 76px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 76px;
+    height: 76px;
 }
 
 .timerCanvas {
-  position: absolute;
-  width: 80px;
-  height: 80px;
+    position: absolute;
+    width: 80px;
+    height: 80px;
 }
 
 .toggle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
 }
 
 .overlay {
-  opacity: 0;
+    opacity: 0;
 }
 
-.overlay:hover {
-  opacity: .5;
-}
+    .overlay:hover {
+        opacity: .5;
+    }
 
 .play {
-  background-image: url(../img/play.png);
-  background-size: 80px 80px;
+    background-image: url(../img/play.png);
+    background-size: 80px 80px;
 }
 
 .pause {
-  background-image: url(../img/pause.png);
-  background-size: 80px 80px;
+    background-image: url(../img/pause.png);
+    background-size: 80px 80px;
 }
 
 .current {
-  position: absolute;
-  top: 25px;
-  left: 90px;
-  display: inline-block;
-  font-size: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 120px;  
+    display: inline-block;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-self: center;
+    grid-area: current-name;
 }
 
 .nextContainer {
-  position: absolute;
-  top: 50px;
-  left: 90px;
-  width: 100px;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: min-content auto;
+    align-items: center;
+    grid-gap: 5px;
+    grid-area: next;
 }
 
 .next {
-  position: absolute;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  border: 2px solid var(--mobber-border-color);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    border: 2px solid var(--mobber-border-color);
 }
 
 .overlay.next {
-  background-image: url(../img/skip.png);
-  background-size: 25px 25px;
+    background-image: url(../img/skip.png);
+    background-size: 25px 25px;
+    position: absolute;
 }
 
 .nextContainer span {
-  position: absolute;
-  top: 10px;
-  left: 35px;
-  font-size: 11px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: inline-block;
-  width: 90px;
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
 }
 
 .configure {
-  position: absolute;
-  display: block;
-  top: 5px;
-  right: 5px;
-  width: 20px;
-  height: 20px;
-  background-color: transparent;
-  background-image: url(../img/configure.png);
-  background-size: 20px 20px;
-  border: 0;
-  opacity: .5;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    background-image: url(../img/configure.png);
+    background-size: 20px 20px;
+    border: 0;
+    opacity: .5;
+    transition: all 0.2s ease;
+    grid-area: configure;
 }
 
-.configure:hover {
-  opacity: .7;
-}
+    .configure:hover {
+        opacity: .7;
+        transform: rotate(-180deg);
+    }
 
 @keyframes pulse {
-  0% {
-    background: var(--timer-pulse-color-1);
-  }
-  50% {
-    background: var(--timer-pulse-color-2);
-  }
-  100% {
-    background: var(--timer-pulse-color-1);
-  }
+    0% {
+        background: var(--timer-pulse-color-1);
+    }
+
+    50% {
+        background: var(--timer-pulse-color-2);
+    }
+
+    100% {
+        background: var(--timer-pulse-color-1);
+    }
 }
 
 .isTurnEnded {
-  color: var(--timer-pulse-text-color);  
+    animation-duration: 1s;
+    animation-name: pulse;
+    animation-iteration-count: infinite;
+    color: var(--timer-pulse-text-color);
 }
 
 .isPaused {
-  color: var(--timer-paused-text-color);
-  background: var(--timer-paused-background-color);
+    color: var(--timer-paused-text-color);
+    background: var(--timer-paused-background-color);
 }
 
 .isTurnEnded .bg-color {
-  animation-duration: 1s;
-  animation-name: pulse;
-  animation-iteration-count: infinite;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;  
+    animation-duration: 1s;
+    animation-name: pulse;
+    animation-iteration-count: infinite;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
 }
 
 audio {
-  display: none;
+    display: none;
 }
 
-.break{
-  display: table-row;
-  text-align: center;
-  font-size: 13px;
+.break {
+    display: table-row;
+    text-align: center;
+    font-size: 13px;
 }
 
-.breakTextContainer{
-  position: absolute;
-  right: 30px;
-  top: 8px;
+.breakTextContainer {
+    position: absolute;
+    right: 30px;
+    top: 8px;
 }
 
-.breakNowLink{
-  cursor: pointer;
-  text-decoration: underline;
+.breakNowLink {
+    cursor: pointer;
+    text-decoration: underline;
 }
