@@ -113,13 +113,22 @@ input[type="checkbox" i] {
     margin-left: -1em;
 }
 
+.break-duration-mins {
+    width: 40px;
+    margin-left: -1em;
+}
+
+.break-frequency-mins {
+    width: 40px;
+}
+
 #replayAudioContainer.disabled {
     color: var(--disabled-text-color);
 }
 
-    #replayAudioContainer.disabled .replay-audio-seconds-suffix {
-        opacity: 0.5;
-    }
+#replayAudioContainer.disabled .replay-audio-seconds-suffix {
+    opacity: 0.5;
+}
 
 .custom-sound {
     width: 145px;
@@ -139,6 +148,7 @@ input[type="checkbox" i] {
 
 .git-port {
     width: 45px;
+    margin-left: -1em;
 }
 
 .git-input {

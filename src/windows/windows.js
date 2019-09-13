@@ -2,9 +2,19 @@ const electron = require("electron");
 const { app } = electron;
 const windowSnapper = require("./window-snapper");
 const path = require("path");
+const {
+    showConfigWindow,
+    sendEventToConfigWindow
+} = require("./config/initialize").initialize();
 
 let timerWindows, configWindow, fullscreenWindows;
 let snapThreshold, secondsUntilFullscreen, timerOnTop;
+
+
+const timerWindowSize = {
+    width: 220,
+    height: 90
+};
 
 exports.createTimerWindow = () => {
     if (timerWindows) {
@@ -26,14 +36,11 @@ function openTimerWindow(display, parent) {
     let { width, height } = display.workAreaSize;
     let { x, y } = display.bounds;
 
-    const timerWidth = 220;
-    const timerHeight = 90;
-
     let timerWindow = new electron.BrowserWindow({
-        x: x + width - timerWidth,
-        y: y + height - timerHeight,
-        width: timerWidth,
-        height: timerHeight,
+        x: x + width - timerWindowSize.width,
+        y: y + height - timerWindowSize.height,
+        width: timerWindowSize.width,
+        height: timerWindowSize.height,
         resizable: false,
         alwaysOnTop: timerOnTop,
         frame: false,
@@ -51,13 +58,6 @@ function openTimerWindow(display, parent) {
     });
 
     timerWindow.loadURL(`file://${__dirname}/timer/index.html`);
-
-    timerWindow.on("closed", x => {
-        if (timerWindows) {
-            closeThisWindow(x); // To prevent an infinate window closing loop
-            exports.closeTimerWindows();
-        }
-    });
 
     timerWindow.on("move", () => {
         if (snapThreshold <= 0) {
@@ -108,49 +108,7 @@ function openTimerWindow(display, parent) {
     return timerWindow;
 }
 
-function closeThisWindow(window) {
-    let i = timerWindows.indexOf(window.sender);
-    timerWindows.splice(i, 1);
-    if (timerWindows.length == 0) timerWindows = null;
-}
-
-exports.closeTimerWindows = () => {
-    if (timerWindows) {
-        windowsCopy = timerWindows.slice();
-        timerWindows = null;
-        windowsCopy.forEach(window => {
-            window.close();
-        });
-    }
-};
-
-exports.showConfigWindow = () => {
-    if (configWindow) {
-        configWindow.show();
-        return;
-    }
-    exports.createConfigWindow();
-};
-
-exports.createConfigWindow = () => {
-    if (configWindow) {
-        return;
-    }
-
-    configWindow = new electron.BrowserWindow({
-        width: 420,
-        height: 500,
-        autoHideMenuBar: true,
-        show: false
-    });
-
-    configWindow.once("ready-to-show", () => {
-        configWindow.show();
-    });
-
-    configWindow.loadURL(`file://${__dirname}/config/index.html`);
-    configWindow.on("closed", () => (configWindow = null));
-};
+exports.showConfigWindow = showConfigWindow;
 
 exports.createFullscreenWindow = () => {
     if (fullscreenWindows) {
@@ -160,16 +118,20 @@ exports.createFullscreenWindow = () => {
     fullscreenWindows = [];
     let displays = electron.screen.getAllDisplays();
     displays.forEach(display => {
-        let { x, y } = display.bounds;
+        let { x, y, width, height } = display.bounds;
 
         let window = createAlwaysOnTopFullscreenInterruptingWindow({
             x,
             y,
-            fullscreen: true,
+            width,
+            height,
             resizable: false,
-            alwaysOnTop: true,
             frame: false,
+            show: false,
             show: false
+            webPreferences: {
+                nodeIntegration: true
+            }
         });
 
         window.once("ready-to-show", () => {
@@ -218,9 +180,9 @@ exports.dispatchEvent = (event, data) => {
             timerWindow.webContents.send(event, data);
         });
     }
-    if (configWindow) {
-        configWindow.webContents.send(event, data);
-    }
+
+    sendEventToConfigWindow(event, data);
+
     if (fullscreenWindows) {
         fullscreenWindows.forEach(window => {
             window.webContents.send(event, data);

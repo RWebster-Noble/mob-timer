@@ -23,9 +23,9 @@ body {
     opacity: .5;
 }
 
-    .drag-handle:hover {
-        opacity: .7;
-    }
+.drag-handle:hover {
+    opacity: .7;
+}
 
 .container {
     position: relative;
@@ -145,10 +145,10 @@ body {
     grid-area: configure;
 }
 
-    .configure:hover {
-        opacity: .7;
-        transform: rotate(-180deg);
-    }
+.configure:hover {
+    opacity: .7;
+    transform: rotate(-180deg);
+}
 
 @keyframes pulse {
     0% {
@@ -200,8 +200,8 @@ audio {
 
 .breakTextContainer {
     position: absolute;
-    right: 30px;
-    top: 8px;
+    right: 27px;
+    top: 3px;
 }
 
 .breakNowLink {

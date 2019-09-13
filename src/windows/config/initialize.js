@@ -14,7 +14,7 @@ exports.initialize = () => {
 
 const createConfigWindow = () => {
   const configWindowInstance = new BrowserWindow({
-    width: 438,
+    width: 444,
     height: 680,
     autoHideMenuBar: true,
     webPreferences: {

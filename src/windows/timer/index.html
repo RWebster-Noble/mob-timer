@@ -10,44 +10,46 @@
 
 <body>
 
-<div id="container" class="container">
-    <div class="bg-color">
+    <div id="container" class="container">
+        <div class="bg-color">
+
+        </div>
+
+        <div class="timerContainer">
+            <img id="currentPic" class="pic currentPic" />
+            <canvas id="timerCanvas" class="timerCanvas" width="160" height="160"></canvas>
+            <div id="toggleButton" class="button overlay toggle"></div>
+        </div>
+
+        <div id="current" class="current">{name}</div>
+
+        <button id="configureButton" class="button configure" title="Configure"></button>
+
+        <div class="breakTextContainer">
+            <p id="nextBreakText" class="break"><a id="breakNowLink" class="breakNowLink">
+            Break</a> at
+            <span id="breakTime"></span></p>
+        </div>
+
+        <div class="nextContainer">
+            <img id="nextPic" class="next" />
+            <div id="nextButton" class="button overlay next"></div>
+            <span id="next">{name}</span>
+        </div>
+
+        <div class="drag-handle">
+
+        </div>
 
     </div>
-    
-    <div class="timerContainer">
-        <img id="currentPic" class="pic currentPic" />
-        <canvas id="timerCanvas" class="timerCanvas" width="160" height="160"></canvas>
-        <div id="toggleButton" class="button overlay toggle"></div>
-    </div>
 
-    <div id="current" class="current">{name}</div>
+    <audio controls id="alertAudio">
+        <source src="./default.mp3" type="audio/mpeg">
+    </audio>
 
-    <button id="configureButton" class="button configure" title="Configure"></button>
-
-    <div class="breakTextContainer">
-        <p id="nextBreakText" class="break"><a id="breakNowLink" class="breakNowLink">Break</a> at <span id="breakTime"></span></p>
-    </div>
-
-    <div class="nextContainer">
-        <img id="nextPic" class="next" /> 
-        <div id="nextButton" class="button overlay next"></div>
-        <span id="next">{name}</span>
-    </div>
-
-    <div class="drag-handle">
-
-    </div>
-
-</div>
-
-<audio controls id="alertAudio">
-    <source src="./default.mp3" type="audio/mpeg">
-</audio>
-
-<script type="text/javascript">
-    require('./index.js')
-</script>
+    <script type="text/javascript">
+        require('./index.js')
+    </script>
 </body>
 
 </html>
