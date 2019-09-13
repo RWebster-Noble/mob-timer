@@ -10,6 +10,7 @@ const {
 let timerWindows, configWindow, fullscreenWindows;
 let snapThreshold, secondsUntilFullscreen, timerOnTop;
 
+let primaryTimerWindow;
 
 const timerWindowSize = {
     width: 220,
@@ -23,7 +24,7 @@ exports.createTimerWindow = () => {
 
     timerWindows = [];
     let primaryDisplay = electron.screen.getPrimaryDisplay();
-    let primaryTimerWindow = openTimerWindow(primaryDisplay, null);
+    primaryTimerWindow = openTimerWindow(primaryDisplay, null);
 
     electron.screen.getAllDisplays().forEach(display => {
         var isPrimaryDisplay = display.id == primaryDisplay.id;
@@ -128,7 +129,7 @@ exports.createFullscreenWindow = () => {
             resizable: false,
             frame: false,
             show: false,
-            show: false
+            parent: primaryTimerWindow,
             webPreferences: {
                 nodeIntegration: true
             }
