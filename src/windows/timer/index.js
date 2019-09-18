@@ -12,7 +12,7 @@ const nextPicEl = document.getElementById("nextPic");
 const nextBtn = document.getElementById("nextButton");
 const timerCanvas = document.getElementById("timerCanvas");
 const alertAudio = document.getElementById("alertAudio");
-const breakP = document.getElementById("nextBreakText");
+const breakContainer = document.getElementById("breakContainer");
 const breakTimeSpn = document.getElementById("breakTime");
 const breakNowA = document.getElementById("breakNowLink");
 
@@ -73,10 +73,9 @@ ipc.on("rotated", (event, data) => {
 
     if (data.onbreak) {
         start();
-        breakP.style.display = "none";
         currentEl.innerHTML = "Break!";
         currentPicEl.src = "../img/coffee.png";
-    } else {
+    } else {   
         currentPicEl.src = data.current.image || "../img/sad-cyclops.png";
         currentEl.innerHTML = data.current.name;
     }
@@ -115,8 +114,15 @@ ipc.on("configUpdated", (event, data) => {
     alertSoundTimes = data.alertSoundTimes;
     alertAudio.src = data.alertSound || "./default.mp3";
 
-    breakP.style.display =
-        data.breakEnabled && data.breakStartsAtTime != -1 ? "" : "none";
+    if (data.breakEnabled && data.breakStartsAtTime != -1) {
+        breakContainer.hidden = false;
+        containerEl.classList.add("continer-break")   
+    }
+    else{
+        
+        breakContainer.hidden = true;
+        containerEl.classList.remove("continer-break") 
+    }
 
     breakTimeSpn.innerText = new Date(data.breakStartsAtTime).toLocaleTimeString(
         [],

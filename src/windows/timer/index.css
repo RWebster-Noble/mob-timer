@@ -31,12 +31,17 @@ body {
     position: relative;
     height: 100vh;
     display: grid;
-    grid-template-columns: min-content auto min-content;
+    grid-template-columns: min-content auto min-content; 
     grid-template-rows: 1fr 1fr;
-    grid-template-areas: "current current-name configure" "current next         next";
+    grid-template-areas: "current current-name configure" "current next         next";   
     padding: 6px;
     box-sizing: border-box;
     grid-gap: 0 6px;
+}
+
+.continer-break{
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: "current break configure" "current current-name configure" "current next         next";
 }
 
 .button {
@@ -198,10 +203,8 @@ audio {
     font-size: 13px;
 }
 
-.breakTextContainer {
-    position: absolute;
-    right: 27px;
-    top: 3px;
+.breakTextContainer {    
+    grid-area: break;
 }
 
 .breakNowLink {
