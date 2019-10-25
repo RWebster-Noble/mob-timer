@@ -42,7 +42,7 @@ ipc.on("configure", () => {
 ipc.on("shuffleMobbers", () => timerState.shuffleMobbers());
 ipc.on("addMobber", (event, mobber) => timerState.addMobber(mobber));
 ipc.on("removeMobber", (event, mobber) => timerState.removeMobber(mobber));
-ipc.on("updateMobber", (event, mobber) => timerState.updateMobber(mobber));
+ipc.on("updateMobber", (event, mobber) => timerState.updateMobber(mobber, event));
 ipc.on("setSecondsPerTurn", (event, secondsPerTurn) =>
     timerState.setSecondsPerTurn(secondsPerTurn)
 );
@@ -83,10 +83,10 @@ ipc.on("updateGitIntegration", (event, value) =>
     timerState.updateGitIntegration(value)
 );
 
-ipc.on("updateMobberWithoutPublish", (event, mobber) => {
-    timerState.mobbers.updateMobber(mobber);
+ipc.on("updateMobberWithoutPublish", function (event, mobber) {
+    timerState.mobbers.updateMobber(mobber, timerState, event);
     statePersister.write(timerState.getState(), onTimerEvent);
-});
+}.bind(windows));
 
 app.on("window-all-closed", function () {
     if (process.platform !== "darwin") {

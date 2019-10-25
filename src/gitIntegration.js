@@ -8,7 +8,6 @@ class GitIntegration {
     this.mainTimer = mainTimer;
     this.server = null;
     this.port = 6904;
-    this.path = path;
     this.primaryTimerWindow = null;
   }
 
@@ -82,13 +81,13 @@ class GitIntegration {
           title: "Mob Timer Git Commit",
           message: "Mob Timer Paused",
           detail: "Include active mobbers in git co-authors?",
-          icon: this.path.join(__dirname, "/../src/windows/img/warning2.ico"),
+          icon: path.join(__dirname, "/../src/windows/img/warning2.ico"),
           cancelId: 1,
           noLink: true,
           normalizeAccessKeys: true
         };
 
-        const dialogResult = dialog.showMessageBox(
+        const dialogResult = dialog.showMessageBoxSync(
           this.primaryTimerWindow,
           options
         );

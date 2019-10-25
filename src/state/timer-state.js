@@ -287,12 +287,12 @@ class TimerState {
         this.callback("rotated", this.getCurrentAndNextMobbers());
     }
 
-    updateMobber(mobber) {
+    updateMobber(mobber, event) {
         const currentMobber = this.mobbers.getCurrentAndNextMobbers().current;
         const disablingCurrentMobber =
             currentMobber && currentMobber.id === mobber.id && mobber.disabled;
 
-        this.mobbers.updateMobber(mobber);
+        this.mobbers.updateMobber(mobber, this, event);
 
         if (disablingCurrentMobber) {
             this.pause();
