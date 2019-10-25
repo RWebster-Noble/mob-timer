@@ -77,11 +77,6 @@ class Mobbers {
               headers: { 'User-Agent': 'request' }
             };
             https.get(options, function (res) {
-              // var json = '';
-              // res.on('data', function (chunk) {
-              //   json += chunk;
-              // });
-              // res.on('end', function () {
                 if (res.statusCode === 302) {
                   try {
                     https.get(res.headers.location, function (response) {
@@ -92,51 +87,7 @@ class Mobbers {
                         const file = fs.createWriteStream(avatarPath);
                         response.pipe(file);
                         file.on('finish', function () {
-                          file.close();
-                          // const options = {
-                          //   // type: "info",
-                          //   // buttons: ["&Yes", "&No"],
-                          //   // defaultId: 0,
-                          //   // title: "Mob Timer GitHub Avatar",
-                          //   // message: "Use GitHub Avatar?",
-                          //   // detail: mobber.name + " has an Avatar on GitHub. Would you like to use it?",
-                          //   // cancelId: 1,
-                          //   // noLink: false,
-                          //   // normalizeAccessKeys: true
-                          // };
-                          // const options = new dialog.MessageBoxOptions();
-                          //   options.type =  "warning";
-                          //   options.buttons =  ["&Yes", "&No", "&Abort Commit"];
-                          //   options.defaultId =  0;
-                          //   options.title =  "Mob Timer Git Commit";
-                          //   options.message =  "Mob Timer Paused";
-                          //   options.detail =  "Include active mobbers in git co-authors?";
-                          //   options.// = con: path.join(__dirname, "/../src/windows/img/warning2.ico");
-                          //   options.cancelId =  1;
-                          //   options.noLink =  true;
-                          //   options.normalizeAccessKeys =  true;
-                          
-                          // dialog.showMessageBoxSync(
-                          //   //this.event.sender,
-                          //   options
-                          // );
-                          // .then((dialogResult) => {
-                          //   if (dialogResult.response === 0) {
-                          //     this.mobber.image = avatarPath;
-                          //     this.timerState.publishConfig()
-                          //   }
-                          // });
-
-                          // const options = {
-                          //   type: 'question',
-                          //   buttons: ['Cancel', 'Yes, please', 'No, thanks'],
-                          //   defaultId: 2,
-                          //   title: 'Question',
-                          //   message: 'Do you want to do this?',
-                          //   detail: 'It does not really matter',
-                          //   checkboxLabel: 'Remember my answer',
-                          //   checkboxChecked: true,
-                          // };
+                          file.close();                         
 
                           const options = {
                             type: "question",
@@ -145,7 +96,6 @@ class Mobbers {
                             title: "Use Profile Picture",
                             message: "Profile pictue found.",
                             detail: `Found profile picture for ${mobber.gitUsername}\non GitHub would you like to use it?`,
-                            //icon: path.join(__dirname, "/../src/windows/img/warning2.ico"),
                             cancelId: 1,
                             noLink: false,
                             normalizeAccessKeys: true
@@ -163,7 +113,6 @@ class Mobbers {
                   } catch (e) {
                   }
                 }
-              // });
             }.bind(this));
           }
         }.bind({mobber:this.mobbers[index], timerState, configWindow:event.sender.getOwnerBrowserWindow()}));
