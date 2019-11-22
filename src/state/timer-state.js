@@ -138,22 +138,24 @@ class TimerState {
         }
     }
 
-    startBreak(immediately) { 
-        if (this.breakTimer.isRunning())
+    startBreak(immediately) {
+        if (this.breakTimer.isRunning()) {
+            this.callback("alert", true);
             return;
+        };
 
         if (immediately) {
             this.callback("alert", true);
             if (this.breakTimer.isRunning())
                 return;
         }
-        
+
         this.breakTimer.reset(this.breakDurationSeconds);
         this.breakTimer.start();
-        this.mainTimer.pause();        
+        this.mainTimer.pause();
 
         if (this.mainTimer.time > (this.secondsPerTurn / 2.0))// less than half way through the turn) 
-        {             
+        {
             this.reset();
             this.callback("rotated", this.getCurrentAndNextMobbers());
         }
@@ -165,7 +167,7 @@ class TimerState {
     stopBreak() {
         this.breakTimer.pause();
         this.breakTimer.reset(this.breakDurationSeconds);
-        this.callback("alert", 0);
+        this.startAlerts();
     }
 
     breakOver() {
