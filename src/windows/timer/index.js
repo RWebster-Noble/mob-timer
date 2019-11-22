@@ -72,7 +72,6 @@ ipc.on("rotated", (event, data) => {
     }
 
     if (data.onbreak) {
-        start();
         currentEl.innerHTML = "Break!";
         currentPicEl.src = "../img/coffee.png";
     } else {   
