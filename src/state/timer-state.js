@@ -23,6 +23,13 @@ class TimerState {
         this.clearClipboardHistoryOnTurnEnd = false;
         this.numberOfItemsClipboardHistoryStores = 25;
 
+        this.initialize = this.initialize.bind(this);
+        this.publishConfig = this.publishConfig.bind(this);
+        this.rotate = this.rotate.bind(this);
+        this.start = this.start.bind(this);
+        this.pause = this.pause.bind(this);
+        this.shuffleMobbers = this.shuffleMobbers.bind(this);
+
         this.lastBreakTime = Date.now();
 
         this.createTimers(options.Timer || Timer);

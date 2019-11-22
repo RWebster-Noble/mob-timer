@@ -1,10 +1,9 @@
 const fs = require("fs");
-const os = require("os");
-const path = require("path");
-
-const mobTimerDir = path.join(os.homedir(), ".mob-timer");
-const stateFile = path.join(mobTimerDir, "state.json");
-const oldStateFile = path.join(os.tmpdir(), "state.json");
+const {
+  stateFile,
+  oldStateFile,
+  mobTimerDir
+} = require("./state-persister-paths");
 
 function read() {
     if (fs.existsSync(stateFile)) {
@@ -28,7 +27,7 @@ function write(state, onTimerEventCallback) {
     var oldState;
     if (fs.existsSync(stateFile)) oldState = fs.readFileSync(stateFile, "utf-8");
 
-    const newstate = JSON.stringify(stateToPersist);
+    const newstate = JSON.stringify(stateToPersist, null, 2);
 
     // Has the state actually changed?
     if (oldState !== newstate) {
