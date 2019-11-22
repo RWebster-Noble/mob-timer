@@ -88,7 +88,7 @@ class GitIntegration {
           normalizeAccessKeys: true
         };
 
-        const dialogResult = dialog.showMessageBox(
+        const dialogResult = dialog.showMessageBoxSync(
           this.primaryTimerWindow,
           options
         );
