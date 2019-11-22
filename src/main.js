@@ -30,7 +30,7 @@ ipc.on("configWindowReady", timerState.publishConfig);
 ipc.on("fullscreenWindowReady", timerState.publishConfig);
 ipc.on("pause", timerState.pause);
 ipc.on("unpause", timerState.start);
-ipc.on("skip", timerState.rotateOrBreak);
+ipc.on("skip", () => timerState.rotateOrBreak());
 ipc.on("takeABreakNow", () => timerState.startBreak(true));
 ipc.on("startTurn", timerState.start);
 ipc.on("shuffleMobbers", timerState.shuffleMobbers);
