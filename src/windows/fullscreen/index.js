@@ -1,4 +1,4 @@
-const theme = require("../theme.js");
+const { mobberBorderHighlightColor } = require("../theme.js").getTheme();
 const ipc = require("electron").ipcRenderer;
 
 const skipBtn = document.getElementById("skip");
@@ -94,7 +94,7 @@ function drawTimerArc(seconds, maxSeconds) {
     }
     let begin = -(0.5 * Math.PI);
     let end = begin + 2 * Math.PI * percent;
-    drawArc(begin, end, theme.mobberBorderHighlightColor);
+    drawArc(begin, end, mobberBorderHighlightColor);
 }
 
 // ipc.on('configUpdated', (event, data) => {
