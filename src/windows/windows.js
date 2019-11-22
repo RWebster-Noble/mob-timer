@@ -11,6 +11,7 @@ let timerWindows, configWindow, fullscreenWindows;
 let snapThreshold, secondsUntilFullscreen, timerOnTop;
 
 let primaryTimerWindow;
+let primaryTimerWindowId;
 
 const timerWindowSize = {
     width: 220,
@@ -25,6 +26,8 @@ exports.createTimerWindow = () => {
     timerWindows = [];
     let primaryDisplay = electron.screen.getPrimaryDisplay();
     primaryTimerWindow = openTimerWindow(primaryDisplay, null);
+
+    primaryTimerWindowId = primaryTimerWindow.id;
 
     electron.screen.getAllDisplays().forEach(display => {
         var isPrimaryDisplay = display.id == primaryDisplay.id;
@@ -102,6 +105,12 @@ function openTimerWindow(display, parent) {
             // windowBounds will have been set to origional position from before snapping
             timerWindow.setPosition(windowBounds.x, windowBounds.y);
         }
+    });
+
+    const timerWindowId = timerWindow.id;
+    timerWindow.on("closed", () => {
+        if(timerWindowId !== primaryTimerWindowId)
+            primaryTimerWindow.close();
     });
 
     timerWindows.push(timerWindow);
