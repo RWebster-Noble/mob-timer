@@ -12,7 +12,6 @@ class TimerState {
         this.mobbers = new Mobbers();
         this.secondsUntilFullscreen = 30;
         this.breakEnabled = true;
-        this.breakDeffered = false;
         this.breakFrequencyMilliseconds = 60 * 60 * 1000; // default 60 mins
         this.breakDurationSeconds = 10 * 60; // default 10 min
         this.snapThreshold = 25;
@@ -91,11 +90,10 @@ class TimerState {
         if (this.shouldBeOnBreak()) {
             this.startBreak(false);
         } else {
-            this.rotateOrBreak();
+            this.rotateOrBreak(false);
             this.callback("turnEnded");
         }
         this.startAlerts();
-        this.breakDeffered = false;
 
         if (this.clearClipboardHistoryOnTurnEnd) {
             clipboard.clearClipboardHistory(this.numberOfItemsClipboardHistoryStores);
@@ -140,17 +138,28 @@ class TimerState {
         }
     }
 
-    startBreak(immediately) {
+    startBreak(immediately) { 
+        if (this.breakTimer.isRunning())
+            return;
+
         if (immediately) {
             this.callback("alert", true);
-            if (this.breakTimer.isRunning()) return;
+            if (this.breakTimer.isRunning())
+                return;
         }
-
+        
         this.breakTimer.reset(this.breakDurationSeconds);
         this.breakTimer.start();
-        this.mainTimer.pause();
-        this.callback("rotated", this.getCurrentAndNextMobbers());
-        this.dispatchTimerChange();
+        this.mainTimer.pause();        
+
+        if (this.mainTimer.time > (this.secondsPerTurn / 2.0))// less than half way through the turn) 
+        {             
+            this.reset();
+            this.callback("rotated", this.getCurrentAndNextMobbers());
+        }
+        else {
+            this.rotate();
+        }
     }
 
     stopBreak() {
@@ -163,14 +172,13 @@ class TimerState {
         this.stopBreak();
         this.lastBreakTime = Date.now();
         this.reset();
-        this.rotate();
+        this.callback("rotated", this.getCurrentAndNextMobbers());
         this.publishConfig();
     }
 
     deferBreak() {
         this.stopBreak();
-        this.breakDeffered = true;
-        this.rotate();
+        this.callback("rotated", this.getCurrentAndNextMobbers());
     }
 
     breakStartsAtTime() {
@@ -208,9 +216,9 @@ class TimerState {
         this.publishConfig();
     }
 
-    rotateOrBreak() {
-        if (this.nextMobber.break) {
-            this.startBreak(false);
+    rotateOrBreak(skipped) {
+        if (this.nextMobber.break && !this.breakTimer.isRunning()) {
+            this.startBreak(skipped);
             this.startAlerts();
             this.publishConfig();
             return;
@@ -235,10 +243,14 @@ class TimerState {
         let currAndNext = this.mobbers.getCurrentAndNextMobbers();
 
         if (this.breakTimer.isRunning()) {
-            currAndNext.current = {
-                id: null,
-                name: "Break!",
-                image: "../img/coffee.png"
+            return {
+                current: {
+                    id: null,
+                    name: "Break!",
+                    image: "../img/coffee.png"
+                },
+                next: currAndNext.current,
+                onbreak: true
             };
         } else if (this.breakNextTurn()) {
             currAndNext.next = {
