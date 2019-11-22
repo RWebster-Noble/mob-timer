@@ -7,10 +7,6 @@
     <style>
         @charset "UTF-8";
 
-        ::-webkit-scrollbar {
-            display: none;
-        }
-
         code {
             color: #c7254e;
             background-color: #f9f2f4;
@@ -5601,34 +5597,37 @@
     </style>
 </head>
 <script>
-    const { shell } = require('electron')
+    const { shell } = require('electron');
 </script>
 
-<body id="preview">
-    <h1 class="code-line" data-line-start=0 data-line-end=1><a id="Git_Integration_0"></a>Git Integration</h1>
-    <p class="has-line-data" data-line-start="2" data-line-end="3">This uses Git Hooks (<a
-            onclick="shell.openExternal('https\:\/\/git-scm.com/docs/githooks')">documentation</a>) to edit the commit
-        message and include
-        co-authors (<a
-            onclick="shell.openExternal('https\:\/\/help.github.com/en/articles/creating-a-commit-with-multiple-authors')">documetation</a>)
-    </p>
-    <p class="has-line-data" data-line-start="4" data-line-end="5">To setup copy the following script and paste it in to
-        <code>.git\hooks\commit-msg</code> for all of the Git repos you want to use this for.</p>
-    <pre><code class="has-line-data" data-line-start="7" data-line-end="20">#!/bin/sh
+<h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="Git_Integration_0"></a>Git Integration</h1>
+<p class="has-line-data" data-line-start="1" data-line-end="3">This uses Git Hooks (<a onclick="shell.openExternal('https\:\/\/git-scm.com/docs/githooks')">documentation</a>) to edit the commit message and include co-authors (<a onclick="shell.openExternal('https\:\/\/help.github.com/en/articles/creating-a-commit-with-multiple-authors')">documetation</a>)<br>
+This integration communicates with git using TCP. You can configure the port by changing <code>dev/tcp/localhost/{<i>PORT</i>}</code> in the script.</p>
+<h2 class="code-line" data-line-start=4 data-line-end=5 ><a id="Setup_4"></a>Setup:</h2>
+<p class="has-line-data" data-line-start="6" data-line-end="7">Create a folder somewhere sensible and add the script below to a file called <code>commit-msg</code>.</p>
+<pre><code class="has-line-data" data-line-start="9" data-line-end="22" class="language-bash"><span class="hljs-shebang">#!/bin/sh
+</span>
+mobTimerResponce=$(cat &lt;/dev/tcp/localhost/<span class="hljs-number">6904</span>)
 
-mobTimerResponce=$(cat &lt;/dev/tcp/localhost/6904)
-
-if  [[ $mobTimerResponce == MobTimerGitCommitCoAuthors* ]] 
-then
-    authors=${mobTimerResponce#MobTimerGitCommitCoAuthors}
-    echo &quot;$authors&quot; &gt;&gt; &quot;$1&quot; 
-elif [[ $mobTimerResponce == MobTimerGitAbortCommit ]] 
-then
-    exit 1
-fi
+<span class="hljs-keyword">if</span>  [[ <span class="hljs-variable">$mobTimerResponce</span> == MobTimerGitCommitCoAuthors* ]] 
+<span class="hljs-keyword">then</span>
+    authors=<span class="hljs-variable">${mobTimerResponce#MobTimerGitCommitCoAuthors}</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$authors</span>"</span> &gt;&gt; <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> 
+<span class="hljs-keyword">elif</span> [[ <span class="hljs-variable">$mobTimerResponce</span> == MobTimerGitAbortCommit ]] 
+<span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">exit</span> <span class="hljs-number">1</span>
+<span class="hljs-keyword">fi</span>
 </code></pre>
-    <p class="has-line-data" data-line-start="23" data-line-end="24">This integration comunicates over TCP, you can
-        configure the port by changing <code>dev/tcp/localhost/{PORT}</code>in the above script</p>
-</body>
+<h4 class="code-line" data-line-start=23 data-line-end=24 ><a id="Method_1_corehooksPath_23"></a>Method #1: <code>core.hooksPath</code></h4>
+<p class="has-line-data" data-line-start="24" data-line-end="25">Git is able to use single folder for all git hooks across all repos on your system. This won’t work alongside any existing git hooks you may be using.</p>
+<ul>
+<li class="has-line-data" data-line-start="25" data-line-end="27">Set the global hooks path using <code>git config --global core.hooksPath {path-to-folder}</code></li>
+</ul>
+<h4 class="code-line" data-line-start=27 data-line-end=28 ><a id="Method_2_inittemplatedir_27"></a>Method #2: <code>init.templatedir</code></h4>
+<p class="has-line-data" data-line-start="28" data-line-end="29">Alternatively Git is able to use a template folder for git hooks. Whenever a repo is cloned or initialised Git will copy any hooks from this folder to the hooks folder of the repo.</p>
+<ul>
+<li class="has-line-data" data-line-start="29" data-line-end="30">Set the template hooks path using <code>git config --global init.templatedir {path-to-folder}</code></li>
+<li class="has-line-data" data-line-start="30" data-line-end="31">Re-initialise any repos you want this integration to work for using <code>git init</code></li>
+</ul>
 
 </html>

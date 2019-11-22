@@ -35,11 +35,11 @@ class GitIntegration {
   displayHelp() {
     let helpWindow = new BrowserWindow({
       title: "Mob Timer - Git Integration",
-      useContentSize: true,
-      width: 539,
-      height: 700,
       show: false,
-      autoHideMenuBar: true
+      autoHideMenuBar: true,      
+      webPreferences: {
+        nodeIntegration: true
+      }    
     });
     helpWindow.on("closed", () => {
       helpWindow = null;
