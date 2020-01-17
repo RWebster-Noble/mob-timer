@@ -390,9 +390,9 @@ class TimerState {
         this.publishConfig();
     }
 
-    updateGitIntegration(value) {
+    updateGitIntegration(event, value) {
         if (value.enabled === true) {
-            this.gitIntegration.displayHelp();
+            this.gitIntegration.displayHelp(event);
         }
         this.setGitIntegration(value);
     }

@@ -109,19 +109,17 @@ function openTimerWindow(display, parent) {
     });
 
     const timerWindowId = timerWindow.id;
-    timerWindow.on("closed", (e) => {
-        //timerWindows.splice( timerWindows.indexOf(e), 1 );
+    timerWindow.on("closed", () => {
         if (timerWindowId !== primaryTimerWindowId)
             primaryTimerWindow.close();
     });
 
-    // timerWindow.on("close", (e) => {
-    //     var configWindow = getConfigWindow();
-    //     if (configWindow != null) {
-    //         configWindow.focus()
-    //         e.preventDefault();
-    //     }
-    // });
+    timerWindow.on("close", (e) => {
+        var configWindow = getConfigWindow();
+        if (configWindow != null) {
+            configWindow.close()
+        }
+    });
 
     timerWindows.push(timerWindow);
 
@@ -198,12 +196,7 @@ exports.dispatchEvent = (event, data) => {
 
     if (timerWindows) {
         timerWindows.forEach(timerWindow => {
-            // try {
             timerWindow.webContents.send(event, data);
-            // }
-            // catch (err) {
-            //     debugger;
-            // }
         });
     }
 

@@ -80,7 +80,7 @@ ipc.on("setNumberOfItemsClipboardHistoryStores", (event, value) =>
     timerState.setNumberOfItemsClipboardHistoryStores(value)
 );
 ipc.on("updateGitIntegration", (event, value) =>
-    timerState.updateGitIntegration(value)
+    timerState.updateGitIntegration(event, value)
 );
 
 ipc.on("updateMobberWithoutPublish", (event, mobber) => {

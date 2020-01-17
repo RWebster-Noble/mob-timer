@@ -32,20 +32,21 @@ class GitIntegration {
     }
   }
 
-  displayHelp() {
+  displayHelp(event) {
     let helpWindow = new BrowserWindow({
+      parent: BrowserWindow.fromWebContents(event.sender.webContents),
       title: "Mob Timer - Git Integration",
       show: false,
       autoHideMenuBar: true,      
       webPreferences: {
         nodeIntegration: true
-      }    
+      },
+      minimizable: false
     });
     helpWindow.on("closed", () => {
       helpWindow = null;
     });
 
-    // Or load a local HTML file
     helpWindow.loadURL(`file://${__dirname}\\windows\\gitIntegrationHelp.html`);
 
     helpWindow.once("ready-to-show", () => {
