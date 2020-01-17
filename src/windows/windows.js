@@ -4,10 +4,11 @@ const windowSnapper = require("./window-snapper");
 const path = require("path");
 const {
     showConfigWindow,
-    sendEventToConfigWindow
+    sendEventToConfigWindow,
+    getConfigWindow
 } = require("./config/initialize").initialize();
 
-let timerWindows, configWindow, fullscreenWindows;
+let timerWindows, fullscreenWindows;
 let snapThreshold, secondsUntilFullscreen, timerOnTop;
 
 let primaryTimerWindow;
@@ -108,17 +109,26 @@ function openTimerWindow(display, parent) {
     });
 
     const timerWindowId = timerWindow.id;
-    timerWindow.on("closed", () => {
-        if(timerWindowId !== primaryTimerWindowId)
+    timerWindow.on("closed", (e) => {
+        //timerWindows.splice( timerWindows.indexOf(e), 1 );
+        if (timerWindowId !== primaryTimerWindowId)
             primaryTimerWindow.close();
     });
+
+    // timerWindow.on("close", (e) => {
+    //     var configWindow = getConfigWindow();
+    //     if (configWindow != null) {
+    //         configWindow.focus()
+    //         e.preventDefault();
+    //     }
+    // });
 
     timerWindows.push(timerWindow);
 
     return timerWindow;
 }
 
-exports.showConfigWindow = showConfigWindow;
+exports.showConfigWindow = () => showConfigWindow(primaryTimerWindow);
 
 exports.createFullscreenWindow = () => {
     if (fullscreenWindows) {
@@ -179,16 +189,21 @@ exports.dispatchEvent = (event, data) => {
         exports.setConfigState(data);
     }
     if (event === "alert")
-        if((data === secondsUntilFullscreen || data === true)) {
+        if ((data === secondsUntilFullscreen || data === true)) {
             exports.createFullscreenWindow();
-    }
+        }
     if (event === "stopAlerts") {
         exports.closeFullscreenWindows();
     }
 
     if (timerWindows) {
         timerWindows.forEach(timerWindow => {
+            // try {
             timerWindow.webContents.send(event, data);
+            // }
+            // catch (err) {
+            //     debugger;
+            // }
         });
     }
 

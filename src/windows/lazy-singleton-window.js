@@ -2,12 +2,12 @@ exports.asLazySingletonWindow = createBrowserWindow => {
   let browserWindow;
 
   return {
-    showWindow: () => {
+    showWindow: (parent) => {
       if (browserWindow) {
         browserWindow.show();
         return;
       }
-      browserWindow = createBrowserWindow();
+      browserWindow = createBrowserWindow(parent);
       browserWindow.on("closed", () => (browserWindow = undefined));
     },
     trySendEvent: (event, data) =>
