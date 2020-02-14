@@ -252,7 +252,8 @@ class TimerState {
                     image: "../img/coffee.png"
                 },
                 next: currAndNext.current,
-                onbreak: true
+                onbreak: true,
+                breakFrequencyMilliseconds: this.breakFrequencyMilliseconds
             };
         } else if (this.breakNextTurn()) {
             currAndNext.next = {

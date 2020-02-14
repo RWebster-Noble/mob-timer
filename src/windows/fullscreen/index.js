@@ -27,7 +27,8 @@ ipc.on("rotated", (event, data) => {
     if (data.onbreak) {
         currentEl.innerHTML = "Break!";
         currentPicEl.src = "../img/break.png";
-        startTurnBtn.innerHTML = "Postpone";
+        startTurnBtn.innerHTML = "Skip untill next mobber";
+        skipBtn.innerHTML = `Skip for ${data.breakFrequencyMilliseconds / 1000 / 60} mins`;
         sitMessage.hidden = true;
         timerCanvas.hidden = false;
         breakTimeDiv.style.display = "none";
@@ -36,6 +37,7 @@ ipc.on("rotated", (event, data) => {
         currentEl.innerHTML = data.current.name;
         currentPicEl.src = data.current.image || "../img/sad-cyclops.png";
         startTurnBtn.innerHTML = "Start";
+        skipBtn.innerHTML = "Skip"
         sitMessage.hidden = false;
         timerCanvas.hidden = true;
     }
