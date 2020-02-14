@@ -155,4 +155,6 @@ breakNowA.addEventListener("click", () =>
     onBreak ? ipc.send("takeABreakNow") : ipc.send("takeABreakNow")
 );
 
+const { mobberBorderColor } = getTheme();
+drawTimerCircle(mobberBorderColor);
 ipc.send("timerWindowReady");

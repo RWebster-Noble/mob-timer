@@ -274,10 +274,11 @@ class TimerState {
     }
 
     initialize() {
-        this.rotate();
-        this.callback("turnEnded");
-        this.publishConfig();
-    }
+    this.pause();
+    this.rotate();
+    this.callback("turnEnded");
+    this.publishConfig();
+  }
 
     publishConfig() {
         this.callback("configUpdated", this.getState());
